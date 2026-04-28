@@ -183,11 +183,8 @@
       font-size: 0.98rem;
     }
 
-    .language-compact {
-      max-width: 130px;
-    }
-
-    .language-compact select {
+    .language-compact-select {
+      width: 82px;
       height: 38px;
       padding: 6px 10px;
       font-size: 0.9rem;
@@ -195,7 +192,7 @@
 
     .actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       margin-top: 4px;
     }
@@ -204,6 +201,7 @@
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px solid var(--border);
+      align-items: center;
     }
 
     button {
@@ -373,13 +371,10 @@
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
         <div class="actions panel-actions">
-          <label for="language" class="language-compact" style="margin:0;">
-            <span style="font-size:0.85rem;color:#6b7280;font-weight:600;">Language</span>
-            <select id="language">
-              <option value="en">EN</option>
-              <option value="cz">CZ</option>
-            </select>
-          </label>
+          <select id="language" class="language-compact-select" title="Language">
+            <option value="en">EN</option>
+            <option value="cz">CZ</option>
+          </select>
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
           <button class="secondary" id="copyBtn" type="button">Copy</button>
           <button class="ghost" id="openInEmailBtn" type="button">Otevřít v emailu</button>
