@@ -588,6 +588,25 @@
       templateBodyEditor.innerHTML = "";
     }
 
+    function getEditorFormat(editorEl) {
+      if (!editorEl) return {};
+      return {
+        lineHeight: editorEl.style.lineHeight || "",
+        compactSpacing: editorEl.classList.contains("compact-spacing")
+      };
+    }
+
+    function applyEditorFormat(editorEl, format) {
+      if (!editorEl) return;
+      const safeFormat = format || {};
+      editorEl.style.lineHeight = safeFormat.lineHeight || "";
+      if (safeFormat.compactSpacing) {
+        editorEl.classList.add("compact-spacing");
+      } else {
+        editorEl.classList.remove("compact-spacing");
+      }
+    }
+
     function getIdeaHtml() {
       return (ideaEditor.innerHTML || "").trim();
     }
@@ -694,6 +713,7 @@
       templatePurposeInput.value = template.purpose;
       templateSubjectInput.value = template.subject;
       setTemplateBodyContent(template.bodyHtml, template.body);
+      applyEditorFormat(templateBodyEditor, template.bodyFormat);
       showToast("Šablona načtena do editoru.");
     }
 
@@ -704,6 +724,7 @@
         return;
       }
       setIdeaContent(draftBodyHtml, draftBodyText);
+      applyEditorFormat(ideaEditor, getEditorFormat(templateBodyEditor));
     }
 
     function renderTemplates() {
@@ -717,6 +738,7 @@
         return;
       }
       setIdeaContent(selected.bodyHtml, selected.body);
+      applyEditorFormat(ideaEditor, selected.bodyFormat);
       showToast("Šablona načtena pro e-mail.");
     }
 
@@ -837,7 +859,8 @@
         purpose: purpose,
         subject: subject,
         body: body,
-        bodyHtml: bodyHtml
+        bodyHtml: bodyHtml,
+        bodyFormat: getEditorFormat(templateBodyEditor)
       });
 
       saveTemplates();
@@ -885,7 +908,8 @@
         purpose: purpose,
         subject: subject,
         body: body,
-        bodyHtml: bodyHtml
+        bodyHtml: bodyHtml,
+        bodyFormat: getEditorFormat(templateBodyEditor)
       };
 
       saveTemplates();
