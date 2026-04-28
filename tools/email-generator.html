@@ -194,6 +194,18 @@
       margin: 0;
     }
 
+    .workspace .field-compact {
+      margin: 0;
+      padding: 0;
+    }
+
+    .workspace .section-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 2px 0 0;
+      line-height: 1.1;
+    }
+
     .template-select {
       min-height: auto;
       height: 34px;
@@ -393,12 +405,11 @@
         <p class="muted">Vyber jazyk, napiš zadání a jedním klikem vygeneruj výsledek.</p>
 
         <section class="grid scroll-area">
-          <label for="templateSelect">
-            Vyber šablonu
-            <select id="templateSelect" class="template-select"></select>
-          </label>
+          <div class="field-compact">
+            <select id="templateSelect" class="template-select" aria-label="Vyber šablonu"></select>
+          </div>
 
-          <label for="ideaEditor">Návrh e-mailu (editable)</label>
+          <p class="section-label">Návrh e-mailu (editable)</p>
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
         <div class="actions panel-actions">
