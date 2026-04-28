@@ -393,11 +393,11 @@
           <label for="templateBodyEditor">Tělo e-mailu</label>
           <div class="editor-wrap">
             <div class="editor-toolbar">
-              <button class="editor-btn" type="button" data-editor-cmd="bold"><strong>B</strong></button>
-              <button class="editor-btn" type="button" data-editor-cmd="removeFormat">Tx</button>
-              <button class="editor-btn" type="button" data-editor-cmd="insertUnorderedList">• List</button>
-              <button class="editor-btn" type="button" data-editor-cmd="insertOrderedList">1. List</button>
-              <button class="editor-btn" type="button" data-editor-cmd="insertParagraph">↵ New line</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="bold"><strong>B</strong></button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="removeFormat">Tx</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertUnorderedList">• List</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertParagraph">↵ New line</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
           </div>
@@ -420,6 +420,16 @@
           </div>
 
           <p class="section-label">Návrh e-mailu (editable)</p>
+          <div class="editor-toolbar">
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="bold"><strong>B</strong></button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="removeFormat">Tx</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertUnorderedList">• List</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertOrderedList">1. List</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="indent">↦ Odsadit</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="outdent">↤ Předsadit</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-lineheight-delta="-0.1">Řádky -</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-lineheight-delta="0.1">Řádky +</button>
+          </div>
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
         <div class="actions panel-actions">
@@ -461,7 +471,7 @@
     const templateSelect = document.getElementById("templateSelect");
     const templateEditSelect = document.getElementById("templateEditSelect");
     const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
-    const editorButtons = document.querySelectorAll("[data-editor-cmd]");
+    const editorButtons = document.querySelectorAll("[data-editor-target]");
     const toast = document.getElementById("toast");
 
     let templates = [];
@@ -485,6 +495,18 @@
       const trimmed = value.trim();
       if (!trimmed) return "";
       return /[.!?]$/.test(trimmed) ? trimmed : trimmed + ".";
+    }
+
+    function getEditorById(editorId) {
+      return document.getElementById(editorId);
+    }
+
+    function adjustEditorLineHeight(editorEl, delta) {
+      if (!editorEl) return;
+      const current = parseFloat(editorEl.style.lineHeight || "1.5");
+      const next = Math.min(2.2, Math.max(1.1, current + delta));
+      editorEl.style.lineHeight = next.toFixed(2);
+      showToast("Řádkování upraveno.");
     }
 
     function escapeHtml(value) {
@@ -975,8 +997,19 @@
 
     editorButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
+        const editorId = btn.getAttribute("data-editor-target");
+        const targetEditor = getEditorById(editorId);
+        if (!targetEditor) return;
+
+        const lineDelta = btn.getAttribute("data-lineheight-delta");
+        if (lineDelta) {
+          adjustEditorLineHeight(targetEditor, parseFloat(lineDelta));
+          return;
+        }
+
         const cmd = btn.getAttribute("data-editor-cmd");
-        templateBodyEditor.focus();
+        if (!cmd) return;
+        targetEditor.focus();
         document.execCommand(cmd, false);
       });
     });
