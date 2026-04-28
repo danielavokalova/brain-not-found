@@ -574,6 +574,15 @@
       const temp = document.createElement("div");
       temp.innerHTML = html || "";
 
+      temp.querySelectorAll("li").forEach(function (li) {
+        li.prepend(document.createTextNode("• "));
+        li.appendChild(document.createTextNode("\n"));
+      });
+
+      temp.querySelectorAll("ul, ol").forEach(function (list) {
+        list.appendChild(document.createTextNode("\n"));
+      });
+
       temp.querySelectorAll("br").forEach(function (el) {
         el.replaceWith("\n");
       });
@@ -584,13 +593,9 @@
         }
       });
 
-      temp.querySelectorAll("li").forEach(function (li) {
-        li.prepend(document.createTextNode("- "));
-        li.appendChild(document.createTextNode("\n"));
-      });
-
       const text = temp.textContent || "";
       return text
+        .replace(/[ \t]+\n/g, "\n")
         .replace(/\n{3,}/g, "\n\n")
         .trim();
     }
@@ -829,6 +834,11 @@
       ].join("\n");
     }
 
+    function isRichTemplateContent() {
+      const html = getIdeaHtml();
+      return /<(ul|ol|li|strong|b|span|p|div)\b/i.test(html);
+    }
+
     function parseEmailParts(emailText) {
       const lines = emailText.split("\n");
       const firstLine = lines[0] || "";
@@ -987,6 +997,10 @@
     });
 
     generateBtn.addEventListener("click", function () {
+      if (templateSelect.value && isRichTemplateContent()) {
+        showToast("Šablona je už připravena včetně formátu.");
+        return;
+      }
       setIdeaContent("", buildEmail());
       showToast("E-mail vygenerován.");
     });
@@ -1040,7 +1054,7 @@
           })
         ]).then(function () {
           window.location.href = mailtoUrl;
-          showToast("Otevřen nový e-mail. Pro vzhled vlož Ctrl+V.");
+          showToast("Otevřen nový e-mail. Vlož Ctrl+V pro 1:1 vzhled.");
         }).catch(function () {
           window.location.href = mailtoUrl;
           showToast("Otevřen nový e-mail.");
