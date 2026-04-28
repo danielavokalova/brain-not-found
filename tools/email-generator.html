@@ -369,18 +369,17 @@
             <select id="templateSelect" class="template-select"></select>
           </label>
 
-          <label for="language" class="language-compact">
-            Language
+          <label for="ideaEditor">Návrh e-mailu (editable)</label>
+          <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
+        </section>
+        <div class="actions panel-actions">
+          <label for="language" class="language-compact" style="margin:0;">
+            <span style="font-size:0.85rem;color:#6b7280;font-weight:600;">Language</span>
             <select id="language">
               <option value="en">EN</option>
               <option value="cz">CZ</option>
             </select>
           </label>
-
-          <label for="ideaEditor">Návrh e-mailu (editable)</label>
-          <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
-        </section>
-        <div class="actions panel-actions">
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
           <button class="secondary" id="copyBtn" type="button">Copy</button>
           <button class="ghost" id="openInEmailBtn" type="button">Otevřít v emailu</button>
