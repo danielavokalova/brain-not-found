@@ -180,6 +180,19 @@
       line-height: 1.25;
     }
 
+    .workspace .muted {
+      display: none;
+    }
+
+    .workspace .grid {
+      gap: 2px;
+    }
+
+    .workspace label {
+      gap: 2px;
+      font-size: 0.92rem;
+    }
+
     .template-select {
       min-height: auto;
       height: 40px;
@@ -863,12 +876,14 @@
 
       const parts = parseEmailParts(finalText);
       const formattedHtml = buildEmailHtmlFromEditor();
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(parts.subject || "Email")}`;
+      const subject = parts.subject || "Email";
+      const plainBody = parts.body || finalText;
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainBody)}`;
 
-      // mailto does not preserve formatting in body; copy rich HTML first.
+      // mailto prefills plain text; clipboard adds rich formatting for paste.
       if (navigator.clipboard && window.ClipboardItem && formattedHtml) {
         const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
-        const textBlob = new Blob([parts.body || finalText], { type: "text/plain" });
+        const textBlob = new Blob([plainBody], { type: "text/plain" });
         navigator.clipboard.write([
           new ClipboardItem({
             "text/html": htmlBlob,
@@ -876,7 +891,7 @@
           })
         ]).then(function () {
           window.location.href = mailtoUrl;
-          showToast("Formátovaný e-mail zkopírován. Vlož do zprávy Ctrl+V.");
+          showToast("Draft otevřen. Pro formát vlož Ctrl+V.");
         }).catch(function () {
           window.location.href = mailtoUrl;
           showToast("Otevírám e-mail klienta.");
