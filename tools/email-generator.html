@@ -240,6 +240,8 @@
         </section>
         <div class="actions panel-actions">
           <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
+          <button class="ghost" id="loadTemplateToEditorBtn" type="button">Načíst do editoru</button>
+          <button class="ghost" id="updateTemplateBtn" type="button">Uložit změny</button>
           <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
         </div>
       </aside>
@@ -304,10 +306,13 @@
     const templateSubjectInput = document.getElementById("templateSubject");
     const templateBodyInput = document.getElementById("templateBody");
     const saveTemplateBtn = document.getElementById("saveTemplateBtn");
+    const loadTemplateToEditorBtn = document.getElementById("loadTemplateToEditorBtn");
+    const updateTemplateBtn = document.getElementById("updateTemplateBtn");
     const templateSelect = document.getElementById("templateSelect");
     const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
 
     let templates = [];
+    let editingTemplateId = null;
 
     function toSentence(value) {
       const trimmed = value.trim();
@@ -373,11 +378,15 @@
       renderTemplateSelect();
     }
 
-    function applySelectedTemplate() {
+    function getSelectedTemplate() {
       const selectedId = templateSelect.value;
-      const selected = templates.find(function (tpl) {
+      return templates.find(function (tpl) {
         return tpl.id === selectedId;
       });
+    }
+
+    function applySelectedTemplate() {
+      const selected = getSelectedTemplate();
       if (!selected) {
         return;
       }
@@ -463,6 +472,14 @@
       return { subject: subject, body: body };
     }
 
+    function resetTemplateEditor() {
+      templateProductInput.value = "";
+      templatePurposeInput.value = "";
+      templateSubjectInput.value = "";
+      templateBodyInput.value = "";
+      editingTemplateId = null;
+    }
+
     saveTemplateBtn.addEventListener("click", function () {
       const product = templateProductInput.value.trim();
       const purpose = templatePurposeInput.value.trim();
@@ -484,11 +501,53 @@
 
       saveTemplates();
       renderTemplates();
+      resetTemplateEditor();
+    });
 
-      templateProductInput.value = "";
-      templatePurposeInput.value = "";
-      templateSubjectInput.value = "";
-      templateBodyInput.value = "";
+    loadTemplateToEditorBtn.addEventListener("click", function () {
+      const selected = getSelectedTemplate();
+      if (!selected) return;
+
+      editingTemplateId = selected.id;
+      templateProductInput.value = selected.product;
+      templatePurposeInput.value = selected.purpose;
+      templateSubjectInput.value = selected.subject;
+      templateBodyInput.value = selected.body;
+    });
+
+    updateTemplateBtn.addEventListener("click", function () {
+      if (!editingTemplateId) {
+        alert("Nejdřív vyber šablonu a klikni na Načíst do editoru.");
+        return;
+      }
+
+      const product = templateProductInput.value.trim();
+      const purpose = templatePurposeInput.value.trim();
+      const subject = templateSubjectInput.value.trim();
+      const body = templateBodyInput.value.trim();
+
+      if (!product || !purpose || !subject || !body) {
+        alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
+        return;
+      }
+
+      const templateIndex = templates.findIndex(function (tpl) {
+        return tpl.id === editingTemplateId;
+      });
+      if (templateIndex === -1) return;
+
+      templates[templateIndex] = {
+        id: templates[templateIndex].id,
+        product: product,
+        purpose: purpose,
+        subject: subject,
+        body: body
+      };
+
+      saveTemplates();
+      renderTemplates();
+      templateSelect.value = templates[templateIndex].id;
+      resetTemplateEditor();
     });
 
     useTemplateBtn.addEventListener("click", function () {
