@@ -278,6 +278,7 @@
         <div class="actions panel-actions">
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
           <button class="secondary" id="copyBtn" type="button">Copy</button>
+          <button class="ghost" id="openInEmailBtn" type="button">Otevřít v emailu</button>
         </div>
       </section>
 
@@ -297,6 +298,7 @@
     const generateBtn = document.getElementById("generateBtn");
     const useTemplateBtn = document.getElementById("useTemplateBtn");
     const copyBtn = document.getElementById("copyBtn");
+    const openInEmailBtn = document.getElementById("openInEmailBtn");
     const templateProductInput = document.getElementById("templateProduct");
     const templatePurposeInput = document.getElementById("templatePurpose");
     const templateSubjectInput = document.getElementById("templateSubject");
@@ -443,6 +445,24 @@
       ].join("\n");
     }
 
+    function parseEmailParts(emailText) {
+      const lines = emailText.split("\n");
+      const firstLine = lines[0] || "";
+      let subject = "";
+      let bodyStartIndex = 0;
+
+      if (firstLine.startsWith("Subject:")) {
+        subject = firstLine.replace("Subject:", "").trim();
+        bodyStartIndex = 2;
+      } else if (firstLine.startsWith("Předmět:")) {
+        subject = firstLine.replace("Předmět:", "").trim();
+        bodyStartIndex = 2;
+      }
+
+      const body = lines.slice(bodyStartIndex).join("\n").trim();
+      return { subject: subject, body: body };
+    }
+
     saveTemplateBtn.addEventListener("click", function () {
       const product = templateProductInput.value.trim();
       const purpose = templatePurposeInput.value.trim();
@@ -503,6 +523,20 @@
           copyBtn.textContent = "Copy";
         }, 1500);
       }
+    });
+
+    openInEmailBtn.addEventListener("click", function () {
+      const text = resultOutput.value.trim();
+      if (!text) {
+        resultOutput.value = buildEmail();
+      }
+
+      const finalText = resultOutput.value.trim();
+      if (!finalText) return;
+
+      const parts = parseEmailParts(finalText);
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(parts.subject || "Email")}&body=${encodeURIComponent(parts.body || finalText)}`;
+      window.location.href = mailtoUrl;
     });
 
     loadTemplates();
