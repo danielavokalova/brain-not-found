@@ -423,6 +423,7 @@
           <button class="ghost" id="loadTemplateToEditorBtn" type="button">Načíst do editoru</button>
           <button class="ghost" id="updateTemplateBtn" type="button">Uložit změny</button>
           <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
+          <button class="ghost" id="loadDefaultsBtn" type="button">+ Přidat výchozí</button>
         </div>
       </aside>
 
@@ -482,6 +483,7 @@
     const templateSelect = document.getElementById("templateSelect");
     const templateEditSelect = document.getElementById("templateEditSelect");
     const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
+    const loadDefaultsBtn = document.getElementById("loadDefaultsBtn");
     const editorButtons = document.querySelectorAll("[data-editor-target]");
     const toast = document.getElementById("toast");
 
@@ -742,20 +744,103 @@
     }
 
     function getDefaultTemplates() {
+      const base = Date.now().toString();
       return [
         {
-          id: Date.now().toString() + "-1",
-          product: "Service",
-          purpose: "Reply to interest",
+          id: base + "-1",
+          product: "Consulting",
+          purpose: "Reply to interest (friendly)",
           subject: "Thanks for your interest",
-          body: "Thank you for your interest. I would be happy to suggest the next step that fits your timeline."
+          body: "Hi [Name],\n\nthanks for reaching out and for your interest in [service/product].\nI would be happy to look into it in more detail.\n\nCould you please share:\n• what exactly you need,\n• your ideal timeline,\n• and your budget (if you have one)?\n\nThen I can suggest the next step.\n\nThanks a lot,\nDaniela",
+          bodyHtml: "<p>Hi [Name],</p><p>thanks for reaching out and for your interest in [service/product].<br>I would be happy to look into it in more detail.</p><p>Could you please share:</p><ul><li>what exactly you need,</li><li>your ideal timeline,</li><li>and your budget (if you have one)?</li></ul><p>Then I can suggest the next step.</p><p>Thanks a lot,<br>Daniela</p>"
         },
         {
-          id: Date.now().toString() + "-2",
-          product: "Služba",
-          purpose: "Připomenutí",
+          id: base + "-2",
+          product: "Consulting",
+          purpose: "Reply to interest (formal)",
+          subject: "Thank you for your interest",
+          body: "Hello [Name],\n\nthank you for your interest in [service/product].\nI would be glad to suggest the best next steps.\n\nTo prepare a specific proposal, please share:\n• what exactly you need,\n• your preferred timeline,\n• and your budget (if applicable).\n\nOnce I have this information, I will follow up with a clear proposal.\n\nBest regards,\nDaniela",
+          bodyHtml: "<p>Hello [Name],</p><p>thank you for your interest in [service/product].<br>I would be glad to suggest the best next steps.</p><p>To prepare a specific proposal, please share:</p><ul><li>what exactly you need,</li><li>your preferred timeline,</li><li>and your budget (if applicable).</li></ul><p>Once I have this information, I will follow up with a clear proposal.</p><p>Best regards,<br>Daniela</p>"
+        },
+        {
+          id: base + "-3",
+          product: "Consulting",
+          purpose: "Follow-up reminder (friendly)",
+          subject: "Quick follow-up",
+          body: "Hi [Name],\n\njust following up on my previous email about [topic].\nIs this still relevant for you?\n\nIf yes, just reply and I will suggest the next step.\n\nThanks and have a great day,\nDaniela",
+          bodyHtml: "<p>Hi [Name],</p><p>just following up on my previous email about [topic].<br>Is this still relevant for you?</p><p>If yes, just reply and I will suggest the next step.</p><p>Thanks and have a great day,<br>Daniela</p>"
+        },
+        {
+          id: base + "-4",
+          product: "Consulting",
+          purpose: "Follow-up reminder (formal)",
+          subject: "Follow-up on my previous email",
+          body: "Hello [Name],\n\nI am following up on my previous email regarding [topic].\nIs this still relevant on your side?\n\nIf so, I would be happy to suggest the next step.\n\nThank you and have a nice day,\nDaniela",
+          bodyHtml: "<p>Hello [Name],</p><p>I am following up on my previous email regarding [topic].<br>Is this still relevant on your side?</p><p>If so, I would be happy to suggest the next step.</p><p>Thank you and have a nice day,<br>Daniela</p>"
+        },
+        {
+          id: base + "-5",
+          product: "Consulting",
+          purpose: "Polite rejection (friendly)",
+          subject: "Thanks for reaching out",
+          body: "Hi [Name],\n\nthanks for your message/offer.\nUnfortunately, I cannot take this on right now.\n\nI do not want to promise something I cannot deliver with the right quality and timing.\nIf you want, I can recommend someone else.\n\nThanks for understanding,\nDaniela",
+          bodyHtml: "<p>Hi [Name],</p><p>thanks for your message/offer.<br>Unfortunately, I cannot take this on right now.</p><p>I do not want to promise something I cannot deliver with the right quality and timing.<br>If you want, I can recommend someone else.</p><p>Thanks for understanding,<br>Daniela</p>"
+        },
+        {
+          id: base + "-6",
+          product: "Consulting",
+          purpose: "Polite rejection (formal)",
+          subject: "Thank you for your offer",
+          body: "Hello [Name],\n\nthank you for your message and trust.\nAfter consideration, I am unable to confirm this collaboration at the moment.\n\nI do not want to commit to a timeline I cannot reliably meet right now.\nIf helpful, I can recommend an alternative.\n\nThank you for your understanding,\nDaniela",
+          bodyHtml: "<p>Hello [Name],</p><p>thank you for your message and trust.<br>After consideration, I am unable to confirm this collaboration at the moment.</p><p>I do not want to commit to a timeline I cannot reliably meet right now.<br>If helpful, I can recommend an alternative.</p><p>Thank you for your understanding,<br>Daniela</p>"
+        },
+        {
+          id: base + "-7",
+          product: "AI konzultace",
+          purpose: "Odpověď na zájem (přátelsky)",
+          subject: "Díky za zájem",
+          body: "Ahoj [Jméno],\n\ndíky za zprávu a zájem o [služba/produkt].\nRáda se na to podívám víc do hloubky.\n\nMohla bys/mohl bys mi prosím poslat:\n• co přesně potřebuješ,\n• ideální časový rámec,\n• a rozpočet (pokud ho máš)?\n\nPak navrhnu další postup.\n\nDíky moc,\nDaniela",
+          bodyHtml: "<p>Ahoj [Jméno],</p><p>díky za zprávu a zájem o [služba/produkt].<br>Ráda se na to podívám víc do hloubky.</p><p>Mohla bys/mohl bys mi prosím poslat:</p><ul><li>co přesně potřebuješ,</li><li>ideální časový rámec,</li><li>a rozpočet (pokud ho máš)?</li></ul><p>Pak navrhnu další postup.</p><p>Díky moc,<br>Daniela</p>"
+        },
+        {
+          id: base + "-8",
+          product: "AI konzultace",
+          purpose: "Odpověď na zájem (formálně)",
+          subject: "Děkuji za zájem",
+          body: "Dobrý den [Jméno],\n\ndíky za zájem o [služba/produkt].\nRáda navrhnu nejlepší další postup.\n\nAby mohla připravit konkrétní návrh, prosím pošlete:\n• co přesně potřebujete,\n• preferovaný časový rámec,\n• a rozpočet (pokud jej máte).\n\nJakmile budu mít tyto informace, ozvím se s jasným návrhem.\n\nS pozdravem,\nDaniela",
+          bodyHtml: "<p>Dobrý den [Jméno],</p><p>díky za zájem o [služba/produkt].<br>Ráda navrhnu nejlepší další postup.</p><p>Aby mohla připravit konkrétní návrh, prosím pošlete:</p><ul><li>co přesně potřebujete,</li><li>preferovaný časový rámec,</li><li>a rozpočet (pokud jej máte).</li></ul><p>Jakmile budu mít tyto informace, ozvím se s jasným návrhem.</p><p>S pozdravem,<br>Daniela</p>"
+        },
+        {
+          id: base + "-9",
+          product: "AI konzultace",
+          purpose: "Follow-up připomenutí (přátelsky)",
           subject: "Krátké připomenutí",
-          body: "Jen navazuji na předchozí zprávu. Pokud je to stále aktuální, ráda navrhnu další postup."
+          body: "Ahoj [Jméno],\n\njen navazuji na předchozí e-mail ohledně [téma].\nJe to stále aktuální?\n\nPokud ano, stačí odpovědět a navrhnu další krok.\n\nDíky a hezký den,\nDaniela",
+          bodyHtml: "<p>Ahoj [Jméno],</p><p>jen navazuji na předchozí e-mail ohledně [téma].<br>Je to stále aktuální?</p><p>Pokud ano, stačí odpovědět a navrhnu další krok.</p><p>Díky a hezký den,<br>Daniela</p>"
+        },
+        {
+          id: base + "-10",
+          product: "AI konzultace",
+          purpose: "Follow-up připomenutí (formálně)",
+          subject: "Navazuji na předchozí e-mail",
+          body: "Dobrý den [Jméno],\n\nnavazuji na předchozí e-mail ohledně [téma].\nJe to stále aktuální z vaší strany?\n\nPokud ano, ráda navrhnu další krok.\n\nDěkuji a přeji hezký den,\nDaniela",
+          bodyHtml: "<p>Dobrý den [Jméno],</p><p>navazuji na předchozí e-mail ohledně [téma].<br>Je to stále aktuální z vaší strany?</p><p>Pokud ano, ráda navrhnu další krok.</p><p>Děkuji a přeji hezký den,<br>Daniela</p>"
+        },
+        {
+          id: base + "-11",
+          product: "AI konzultace",
+          purpose: "Zdvořilé odmítnutí (přátelsky)",
+          subject: "Díky za oslovení",
+          body: "Ahoj [Jméno],\n\ndíky za zprávu.\nBohužel to teď nemůžu vzít na sebe.\n\nNechci slibovat něco, co nedokážu dodat ve správné kvalitě a čase.\nPokud chceš, mohu doporučit někoho jiného.\n\nDíky za pochopení,\nDaniela",
+          bodyHtml: "<p>Ahoj [Jméno],</p><p>díky za zprávu.<br>Bohužel to teď nemůžu vzít na sebe.</p><p>Nechci slibovat něco, co nedokážu dodat ve správné kvalitě a čase.<br>Pokud chceš, mohu doporučit někoho jiného.</p><p>Díky za pochopení,<br>Daniela</p>"
+        },
+        {
+          id: base + "-12",
+          product: "AI konzultace",
+          purpose: "Zdvořilé odmítnutí (formálně)",
+          subject: "Děkuji za nabídku",
+          body: "Dobrý den [Jméno],\n\ndíky za zprávu a důvěru.\nPo zvážení bohužel nemohu tuto spolupráci potvrdit.\n\nNechci se zavazovat k termínu, který v tuto chvíli nemohu spolehlivě splnit.\nPokud by pomohlo, mohu doporučit alternativu.\n\nDěkuji za pochopení,\nDaniela",
+          bodyHtml: "<p>Dobrý den [Jméno],</p><p>díky za zprávu a důvěru.<br>Po zvážení bohužel nemohu tuto spolupráci potvrdit.</p><p>Nechci se zavazovat k termínu, který v tuto chvíli nemohu spolehlivě splnit.<br>Pokud by pomohlo, mohu doporučit alternativu.</p><p>Děkuji za pochopení,<br>Daniela</p>"
         }
       ];
     }
@@ -1076,6 +1161,14 @@
       saveTemplates();
       renderTemplates();
       showToast("Šablona smazána.");
+    });
+
+    loadDefaultsBtn.addEventListener("click", function () {
+      const defaults = getDefaultTemplates();
+      templates = templates.concat(defaults);
+      saveTemplates();
+      renderTemplates();
+      showToast("Výchozí šablony přidány (" + defaults.length + ").");
     });
 
     generateBtn.addEventListener("click", function () {
