@@ -658,29 +658,72 @@
 
     function getMailtoTextFromEditorHtml(editorEl) {
       if (!editorEl) return "";
-      const temp = document.createElement("div");
-      temp.innerHTML = editorEl.innerHTML || "";
+      const root = document.createElement("div");
+      root.innerHTML = editorEl.innerHTML || "";
 
-      temp.querySelectorAll("li").forEach(function (li) {
-        li.prepend(document.createTextNode("• "));
-        li.appendChild(document.createTextNode("\n"));
-      });
+      function serializeChildren(node) {
+        let out = "";
+        node.childNodes.forEach(function (child) {
+          out += serializeNode(child);
+        });
+        return out;
+      }
 
-      temp.querySelectorAll("ul, ol").forEach(function (list) {
-        list.appendChild(document.createTextNode("\n"));
-      });
+      function serializeListItem(liNode) {
+        const raw = serializeChildren(liNode)
+          .replace(/\r\n/g, "\n")
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n{2,}/g, "\n")
+          .trim();
+        if (!raw) return "";
 
-      temp.querySelectorAll("br").forEach(function (el) {
-        el.replaceWith("\n");
-      });
+        const lines = raw.split("\n").map(function (line) {
+          return line.trim();
+        }).filter(function (line) {
+          return line.length > 0;
+        });
+        if (lines.length === 0) return "";
 
-      temp.querySelectorAll("p, div").forEach(function (el) {
-        if (!el.textContent.endsWith("\n")) {
-          el.appendChild(document.createTextNode("\n"));
+        return "• " + lines.join("\n") + "\n";
+      }
+
+      function serializeNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return node.nodeValue || "";
         }
-      });
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+          return "";
+        }
 
-      return (temp.textContent || "")
+        const tag = node.tagName.toLowerCase();
+
+        if (tag === "br") {
+          return "\n";
+        }
+
+        if (tag === "ul" || tag === "ol") {
+          let listOut = "";
+          Array.from(node.children).forEach(function (child) {
+            if (child.tagName && child.tagName.toLowerCase() === "li") {
+              listOut += serializeListItem(child);
+            } else {
+              listOut += serializeNode(child);
+            }
+          });
+          return listOut ? listOut + "\n" : "";
+        }
+
+        if (tag === "li") {
+          return serializeListItem(node);
+        }
+
+        const content = serializeChildren(node).trim();
+        const isBlock = ["p", "div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
+        if (!content) return "";
+        return isBlock ? content + "\n" : content;
+      }
+
+      return serializeChildren(root)
         .replace(/\r\n/g, "\n")
         .replace(/[ \t]+\n/g, "\n")
         .replace(/\n{3,}/g, "\n\n")
