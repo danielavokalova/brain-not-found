@@ -465,7 +465,7 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const STORAGE_KEY = "brain-not-found-email-templates-v2";
+    const STORAGE_KEY = "brain-not-found-email-templates";
 
     const languageInput = document.getElementById("language");
     const ideaEditor = document.getElementById("ideaEditor");
@@ -744,57 +744,7 @@
     }
 
     function getDefaultTemplates() {
-      const base = Date.now().toString();
-      return [
-        {
-          id: base + "-1",
-          product: "Consulting",
-          purpose: "Reply to interest (friendly)",
-          subject: "Thanks for your interest",
-          body: "Hi [Name],\n\nthanks for reaching out and for your interest in [service/product].\nI would be happy to look into it in more detail.\n\nCould you please share:\n• what exactly you need,\n• your ideal timeline,\n• and your budget (if you have one)?\n\nThen I can suggest the next step.\n\nThanks a lot,\nDaniela",
-          bodyHtml: "<p>Hi [Name],</p><p>thanks for reaching out and for your interest in [service/product].<br>I would be happy to look into it in more detail.</p><p>Could you please share:</p><ul><li>what exactly you need,</li><li>your ideal timeline,</li><li>and your budget (if you have one)?</li></ul><p>Then I can suggest the next step.</p><p>Thanks a lot,<br>Daniela</p>"
-        },
-        {
-          id: base + "-2",
-          product: "Consulting",
-          purpose: "Reply to interest (formal)",
-          subject: "Thank you for your interest",
-          body: "Hello [Name],\n\nthank you for your interest in [service/product].\nI would be glad to suggest the best next steps.\n\nTo prepare a specific proposal, please share:\n• what exactly you need,\n• your preferred timeline,\n• and your budget (if applicable).\n\nOnce I have this information, I will follow up with a clear proposal.\n\nBest regards,\nDaniela",
-          bodyHtml: "<p>Hello [Name],</p><p>thank you for your interest in [service/product].<br>I would be glad to suggest the best next steps.</p><p>To prepare a specific proposal, please share:</p><ul><li>what exactly you need,</li><li>your preferred timeline,</li><li>and your budget (if applicable).</li></ul><p>Once I have this information, I will follow up with a clear proposal.</p><p>Best regards,<br>Daniela</p>"
-        },
-        {
-          id: base + "-3",
-          product: "Consulting",
-          purpose: "Follow-up reminder (friendly)",
-          subject: "Quick follow-up",
-          body: "Hi [Name],\n\njust following up on my previous email about [topic].\nIs this still relevant for you?\n\nIf yes, just reply and I will suggest the next step.\n\nThanks and have a great day,\nDaniela",
-          bodyHtml: "<p>Hi [Name],</p><p>just following up on my previous email about [topic].<br>Is this still relevant for you?</p><p>If yes, just reply and I will suggest the next step.</p><p>Thanks and have a great day,<br>Daniela</p>"
-        },
-        {
-          id: base + "-4",
-          product: "Consulting",
-          purpose: "Follow-up reminder (formal)",
-          subject: "Follow-up on my previous email",
-          body: "Hello [Name],\n\nI am following up on my previous email regarding [topic].\nIs this still relevant on your side?\n\nIf so, I would be happy to suggest the next step.\n\nThank you and have a nice day,\nDaniela",
-          bodyHtml: "<p>Hello [Name],</p><p>I am following up on my previous email regarding [topic].<br>Is this still relevant on your side?</p><p>If so, I would be happy to suggest the next step.</p><p>Thank you and have a nice day,<br>Daniela</p>"
-        },
-        {
-          id: base + "-5",
-          product: "Consulting",
-          purpose: "Polite rejection (friendly)",
-          subject: "Thanks for reaching out",
-          body: "Hi [Name],\n\nthanks for your message/offer.\nUnfortunately, I cannot take this on right now.\n\nI do not want to promise something I cannot deliver with the right quality and timing.\nIf you want, I can recommend someone else.\n\nThanks for understanding,\nDaniela",
-          bodyHtml: "<p>Hi [Name],</p><p>thanks for your message/offer.<br>Unfortunately, I cannot take this on right now.</p><p>I do not want to promise something I cannot deliver with the right quality and timing.<br>If you want, I can recommend someone else.</p><p>Thanks for understanding,<br>Daniela</p>"
-        },
-        {
-          id: base + "-6",
-          product: "Consulting",
-          purpose: "Polite rejection (formal)",
-          subject: "Thank you for your offer",
-          body: "Hello [Name],\n\nthank you for your message and trust.\nAfter consideration, I am unable to confirm this collaboration at the moment.\n\nI do not want to commit to a timeline I cannot reliably meet right now.\nIf helpful, I can recommend an alternative.\n\nThank you for your understanding,\nDaniela",
-          bodyHtml: "<p>Hello [Name],</p><p>thank you for your message and trust.<br>After consideration, I am unable to confirm this collaboration at the moment.</p><p>I do not want to commit to a timeline I cannot reliably meet right now.<br>If helpful, I can recommend an alternative.</p><p>Thank you for your understanding,<br>Daniela</p>"
-        },
-      ];
+      return [];
     }
 
     function loadTemplates() {
