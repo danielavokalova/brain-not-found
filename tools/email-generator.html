@@ -187,10 +187,9 @@
       font-size: 0.9rem;
     }
 
-    .workspace textarea#idea,
-    .workspace textarea#result {
+    .workspace textarea#idea {
       min-height: 140px;
-      height: 20vh;
+      height: 28vh;
     }
 
     .workspace textarea#auditInput {
@@ -301,22 +300,21 @@
             <textarea id="auditInput" placeholder="Sem vlož výstup z asistenta, který skenoval web..."></textarea>
           </label>
 
+          <div class="actions">
+            <button class="ghost" id="generateFromAuditBtn" type="button">Vytvořit email z web auditu</button>
+          </div>
+
           <label for="templateSelect">
             Vyber šablonu
             <select id="templateSelect" class="template-select"></select>
           </label>
 
           <label for="idea">
-            Co chceš napsat
+            Návrh e-mailu (editable)
             <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
-          </label>
-
-          <label for="result">Výsledek
-            <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
           </label>
         </section>
         <div class="actions panel-actions">
-          <button class="ghost" id="generateFromAuditBtn" type="button">Vytvořit email z web auditu</button>
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
           <button class="secondary" id="copyBtn" type="button">Copy</button>
           <button class="ghost" id="openInEmailBtn" type="button">Otevřít v emailu</button>
@@ -336,7 +334,6 @@
 
     const languageInput = document.getElementById("language");
     const ideaInput = document.getElementById("idea");
-    const resultOutput = document.getElementById("result");
     const auditUrlInput = document.getElementById("auditUrl");
     const auditInput = document.getElementById("auditInput");
     const generateBtn = document.getElementById("generateBtn");
@@ -474,11 +471,10 @@
       const selected = getSelectedTemplate();
       if (!selected) {
         ideaInput.value = "";
-        resultOutput.value = "";
         return;
       }
       ideaInput.value = `${selected.subject} - ${selected.body}`;
-      resultOutput.value = buildEmailFromTemplate(selected);
+      showToast("Šablona načtena pro e-mail.");
     }
 
     function buildEmailFromTemplate(template) {
@@ -580,6 +576,21 @@
       const language = languageInput.value;
       const url = auditUrlInput.value.trim();
       const rawAudit = auditInput.value.trim();
+
+      if (!rawAudit) {
+        return language === "cz"
+          ? "Dobrý den,\n\nmám pro vás připravené krátké doporučení k webu.\n\nS pozdravem,\nDaniela"
+          : "Hello,\n\nI have a short set of recommendations for your website.\n\nBest regards,\nDaniela";
+      }
+
+      // If the pasted content already looks like a full email draft from Gemini, keep it.
+      const hasEmailShape =
+        /(Subject:|Předmět:)/i.test(rawAudit) &&
+        /(Hello|Dobrý den|Hi)/i.test(rawAudit);
+      if (hasEmailShape) {
+        return rawAudit.trim();
+      }
+
       const points = summarizeAuditText(rawAudit, 3);
 
       if (language === "cz") {
@@ -721,9 +732,7 @@
 
     templateSelect.addEventListener("change", function () {
       applySelectedTemplate();
-      if (templateSelect.value) {
-        showToast("Šablona načtena pro e-mail.");
-      } else {
+      if (!templateSelect.value) {
         showToast("Výběr šablony zrušen.");
       }
     });
@@ -745,19 +754,19 @@
     });
 
     generateBtn.addEventListener("click", function () {
-      resultOutput.value = buildEmail();
+      ideaInput.value = buildEmail();
       showToast("E-mail vygenerován.");
     });
 
     generateFromAuditBtn.addEventListener("click", function () {
-      resultOutput.value = buildEmailFromAudit();
+      ideaInput.value = buildEmailFromAudit();
       showToast("E-mail z web auditu vygenerován.");
     });
 
     copyBtn.addEventListener("click", async function () {
-      if (!resultOutput.value.trim()) return;
+      if (!ideaInput.value.trim()) return;
       try {
-        await navigator.clipboard.writeText(resultOutput.value);
+        await navigator.clipboard.writeText(ideaInput.value);
         copyBtn.textContent = "Copied";
         showToast("Text zkopírován.");
         setTimeout(function () {
@@ -772,12 +781,12 @@
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      const text = resultOutput.value.trim();
+      const text = ideaInput.value.trim();
       if (!text) {
-        resultOutput.value = buildEmail();
+        ideaInput.value = buildEmail();
       }
 
-      const finalText = resultOutput.value.trim();
+      const finalText = ideaInput.value.trim();
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
