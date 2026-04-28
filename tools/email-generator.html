@@ -669,22 +669,18 @@
         return out;
       }
 
-      function serializeListItem(liNode) {
-        const raw = serializeChildren(liNode)
+      function normalizeInline(text) {
+        return (text || "")
           .replace(/\r\n/g, "\n")
           .replace(/[ \t]+\n/g, "\n")
           .replace(/\n{2,}/g, "\n")
           .trim();
+      }
+
+      function serializeListItem(liNode) {
+        const raw = normalizeInline(serializeChildren(liNode));
         if (!raw) return "";
-
-        const lines = raw.split("\n").map(function (line) {
-          return line.trim();
-        }).filter(function (line) {
-          return line.length > 0;
-        });
-        if (lines.length === 0) return "";
-
-        return "• " + lines.join("\n") + "\n";
+        return "• " + raw + "\n";
       }
 
       function serializeNode(node) {
@@ -718,15 +714,18 @@
         }
 
         const content = serializeChildren(node).trim();
-        const isBlock = ["p", "div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
+        const blockWithSingleBreak = ["div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
+        const blockWithDoubleBreak = ["p"].includes(tag);
         if (!content) return "";
-        return isBlock ? content + "\n" : content;
+        if (blockWithDoubleBreak) return content + "\n\n";
+        if (blockWithSingleBreak) return content + "\n";
+        return content;
       }
 
       return serializeChildren(root)
         .replace(/\r\n/g, "\n")
         .replace(/[ \t]+\n/g, "\n")
-        .replace(/\n{2,}/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
         .trim();
     }
 
