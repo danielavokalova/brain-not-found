@@ -400,6 +400,15 @@
       return getSelectedTemplateById(selectedId);
     }
 
+    function fillEditorFromTemplate(template) {
+      if (!template) return;
+      editingTemplateId = template.id;
+      templateProductInput.value = template.product;
+      templatePurposeInput.value = template.purpose;
+      templateSubjectInput.value = template.subject;
+      templateBodyInput.value = template.body;
+    }
+
     function renderTemplates() {
       renderTemplateSelect();
     }
@@ -526,12 +535,7 @@
     loadTemplateToEditorBtn.addEventListener("click", function () {
       const selected = getSelectedTemplateForEditor();
       if (!selected) return;
-
-      editingTemplateId = selected.id;
-      templateProductInput.value = selected.product;
-      templatePurposeInput.value = selected.purpose;
-      templateSubjectInput.value = selected.subject;
-      templateBodyInput.value = selected.body;
+      fillEditorFromTemplate(selected);
     });
 
     updateTemplateBtn.addEventListener("click", function () {
@@ -572,6 +576,11 @@
 
     templateSelect.addEventListener("change", function () {
       applySelectedTemplate();
+    });
+
+    templateEditSelect.addEventListener("change", function () {
+      const selected = getSelectedTemplateForEditor();
+      fillEditorFromTemplate(selected);
     });
 
     deleteSelectedBtn.addEventListener("click", function () {
