@@ -264,10 +264,6 @@
             <select id="templateSelect" class="template-select"></select>
           </label>
 
-          <div class="actions">
-            <button class="ghost" id="useTemplateBtn" type="button">Načíst šablonu do e-mailu</button>
-          </div>
-
           <label for="idea">
             Co chceš napsat
             <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
@@ -298,7 +294,6 @@
     const ideaInput = document.getElementById("idea");
     const resultOutput = document.getElementById("result");
     const generateBtn = document.getElementById("generateBtn");
-    const useTemplateBtn = document.getElementById("useTemplateBtn");
     const copyBtn = document.getElementById("copyBtn");
     const openInEmailBtn = document.getElementById("openInEmailBtn");
     const templateProductInput = document.getElementById("templateProduct");
@@ -550,7 +545,7 @@
       resetTemplateEditor();
     });
 
-    useTemplateBtn.addEventListener("click", function () {
+    templateSelect.addEventListener("change", function () {
       applySelectedTemplate();
     });
 
