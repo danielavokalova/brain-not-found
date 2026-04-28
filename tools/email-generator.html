@@ -218,6 +218,11 @@
         <p class="muted">Definuj produkt, účel, subject a tělo šablony. Uložené šablony se pak vybírají vpravo při tvorbě e-mailu.</p>
 
         <section class="grid scroll-area">
+          <label for="templateEditSelect">
+            Vyber šablonu k editaci
+            <select id="templateEditSelect" class="template-select"></select>
+          </label>
+
           <label for="templateProduct">
             Produkt
             <input id="templateProduct" placeholder="Např. AI konzultace" />
@@ -304,6 +309,7 @@
     const loadTemplateToEditorBtn = document.getElementById("loadTemplateToEditorBtn");
     const updateTemplateBtn = document.getElementById("updateTemplateBtn");
     const templateSelect = document.getElementById("templateSelect");
+    const templateEditSelect = document.getElementById("templateEditSelect");
     const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
 
     let templates = [];
@@ -353,31 +359,49 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
     }
 
-    function renderTemplateSelect() {
-      templateSelect.innerHTML = "";
+    function fillTemplateSelect(selectEl) {
+      selectEl.innerHTML = "";
+
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Vyber šablonu";
+      selectEl.appendChild(defaultOption);
+
       templates.forEach(function (tpl) {
         const option = document.createElement("option");
         option.value = tpl.id;
         option.textContent = `${tpl.product} - ${tpl.purpose}`;
-        templateSelect.appendChild(option);
+        selectEl.appendChild(option);
       });
+
       if (templates.length === 0) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = "Žádná šablona";
-        templateSelect.appendChild(option);
+        defaultOption.textContent = "Žádná šablona";
       }
     }
 
-    function renderTemplates() {
-      renderTemplateSelect();
+    function renderTemplateSelect() {
+      fillTemplateSelect(templateSelect);
+      fillTemplateSelect(templateEditSelect);
+    }
+
+    function getSelectedTemplateById(templateId) {
+      return templates.find(function (tpl) {
+        return tpl.id === templateId;
+      });
     }
 
     function getSelectedTemplate() {
       const selectedId = templateSelect.value;
-      return templates.find(function (tpl) {
-        return tpl.id === selectedId;
-      });
+      return getSelectedTemplateById(selectedId);
+    }
+
+    function getSelectedTemplateForEditor() {
+      const selectedId = templateEditSelect.value;
+      return getSelectedTemplateById(selectedId);
+    }
+
+    function renderTemplates() {
+      renderTemplateSelect();
     }
 
     function applySelectedTemplate() {
@@ -500,7 +524,7 @@
     });
 
     loadTemplateToEditorBtn.addEventListener("click", function () {
-      const selected = getSelectedTemplate();
+      const selected = getSelectedTemplateForEditor();
       if (!selected) return;
 
       editingTemplateId = selected.id;
@@ -542,6 +566,7 @@
       saveTemplates();
       renderTemplates();
       templateSelect.value = templates[templateIndex].id;
+      templateEditSelect.value = templates[templateIndex].id;
       resetTemplateEditor();
     });
 
@@ -550,7 +575,7 @@
     });
 
     deleteSelectedBtn.addEventListener("click", function () {
-      const selectedId = templateSelect.value;
+      const selectedId = templateEditSelect.value || templateSelect.value;
       if (!selectedId) return;
       templates = templates.filter(function (tpl) {
         return tpl.id !== selectedId;
