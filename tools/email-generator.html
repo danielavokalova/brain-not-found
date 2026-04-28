@@ -407,10 +407,12 @@
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦ Odsadit</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤ Předsadit</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1">Řádky 1</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1.15">Řádky 1.15</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1.5">Řádky 1.5</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-compact-spacing="toggle">Odeber mezery</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.1">Vybrané 1.1</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.25">Vybrané 1.25</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.4">Vybrané 1.4</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="narrow">Zúžit blok</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="normal">Normální blok</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="compact">Menší mezery</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertParagraph">↵ New line</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
@@ -534,6 +536,31 @@
       } else {
         showToast("Obnoveny výchozí mezery.");
       }
+    }
+
+    function applyStyleToSelection(editorEl, styleMap) {
+      if (!editorEl) return false;
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) return false;
+      const range = selection.getRangeAt(0);
+      if (range.collapsed) return false;
+      if (!editorEl.contains(range.commonAncestorContainer)) return false;
+
+      const wrapper = document.createElement("span");
+      Object.keys(styleMap).forEach(function (key) {
+        wrapper.style[key] = styleMap[key];
+      });
+
+      try {
+        range.surroundContents(wrapper);
+      } catch (error) {
+        const extracted = range.extractContents();
+        wrapper.appendChild(extracted);
+        range.insertNode(wrapper);
+      }
+
+      selection.removeAllRanges();
+      return true;
     }
 
     function escapeHtml(value) {
@@ -1029,6 +1056,41 @@
         const editorId = btn.getAttribute("data-editor-target");
         const targetEditor = getEditorById(editorId);
         if (!targetEditor) return;
+
+        const selectedLineHeight = btn.getAttribute("data-selection-lineheight");
+        if (selectedLineHeight) {
+          const ok = applyStyleToSelection(targetEditor, {
+            lineHeight: selectedLineHeight
+          });
+          showToast(ok ? `Řádkování výběru ${selectedLineHeight}.` : "Nejdřív označ text.");
+          return;
+        }
+
+        const selectionStyle = btn.getAttribute("data-selection-style");
+        if (selectionStyle) {
+          let styleToApply = null;
+          if (selectionStyle === "narrow") {
+            styleToApply = {
+              display: "inline-block",
+              maxWidth: "620px",
+              width: "100%"
+            };
+          } else if (selectionStyle === "normal") {
+            styleToApply = {
+              display: "inline",
+              maxWidth: "none",
+              width: "auto",
+              margin: "0"
+            };
+          } else if (selectionStyle === "compact") {
+            styleToApply = {
+              lineHeight: "1.2"
+            };
+          }
+          const ok = styleToApply ? applyStyleToSelection(targetEditor, styleToApply) : false;
+          showToast(ok ? "Styl použit na výběr." : "Nejdřív označ text.");
+          return;
+        }
 
         const lineValue = btn.getAttribute("data-lineheight-value");
         if (lineValue) {
