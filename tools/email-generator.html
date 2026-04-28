@@ -703,6 +703,17 @@
       return { subject: subject, body: body };
     }
 
+    function buildEmailHtmlFromEditor() {
+      const rawHtml = getIdeaHtml();
+      if (!rawHtml) return "";
+      return `<!doctype html>
+<html>
+  <body style="font-family: Arial, Helvetica, sans-serif; font-size:14px; line-height:1.45; color:#111827;">
+    ${rawHtml}
+  </body>
+</html>`;
+    }
+
 
     function resetTemplateEditor() {
       templateProductInput.value = "";
@@ -849,7 +860,28 @@
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(parts.subject || "Email")}&body=${encodeURIComponent(parts.body || finalText)}`;
+      const formattedHtml = buildEmailHtmlFromEditor();
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(parts.subject || "Email")}`;
+
+      // mailto does not preserve formatting in body; copy rich HTML first.
+      if (navigator.clipboard && window.ClipboardItem && formattedHtml) {
+        const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
+        const textBlob = new Blob([parts.body || finalText], { type: "text/plain" });
+        navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": htmlBlob,
+            "text/plain": textBlob
+          })
+        ]).then(function () {
+          window.location.href = mailtoUrl;
+          showToast("Formátovaný e-mail zkopírován. Vlož do zprávy Ctrl+V.");
+        }).catch(function () {
+          window.location.href = mailtoUrl;
+          showToast("Otevírám e-mail klienta.");
+        });
+        return;
+      }
+
       window.location.href = mailtoUrl;
       showToast("Otevírám e-mail klienta.");
     });
