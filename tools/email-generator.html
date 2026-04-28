@@ -248,9 +248,23 @@
       font-size: 0.9rem;
     }
 
-    .workspace textarea#idea {
+    .idea-editor {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
       min-height: 140px;
       height: 28vh;
+      padding: 12px;
+      overflow: auto;
+      font-size: 1rem;
+      line-height: 1.5;
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .idea-editor:empty::before {
+      content: attr(data-placeholder);
+      color: #9ca3af;
     }
 
     .workspace textarea#auditInput {
@@ -363,10 +377,8 @@
             </select>
           </label>
 
-          <label for="idea">
-            Návrh e-mailu (editable)
-            <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
-          </label>
+          <label for="ideaEditor">Návrh e-mailu (editable)</label>
+          <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
         <div class="actions panel-actions">
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
@@ -388,7 +400,7 @@
     const STORAGE_KEY = "brain-not-found-email-templates";
 
     const languageInput = document.getElementById("language");
-    const ideaInput = document.getElementById("idea");
+    const ideaEditor = document.getElementById("ideaEditor");
     const openGeminiBtn = document.getElementById("openGeminiBtn");
     const generateBtn = document.getElementById("generateBtn");
     const copyBtn = document.getElementById("copyBtn");
@@ -479,6 +491,26 @@
         return;
       }
       templateBodyEditor.innerHTML = "";
+    }
+
+    function getIdeaHtml() {
+      return (ideaEditor.innerHTML || "").trim();
+    }
+
+    function getIdeaText() {
+      return htmlToPlainText(getIdeaHtml());
+    }
+
+    function setIdeaContent(htmlValue, plainValue) {
+      if (htmlValue && htmlValue.trim()) {
+        ideaEditor.innerHTML = htmlValue;
+        return;
+      }
+      if (plainValue && plainValue.trim()) {
+        ideaEditor.innerHTML = escapeHtml(plainValue).replace(/\n/g, "<br>");
+        return;
+      }
+      ideaEditor.innerHTML = "";
     }
 
     function getDefaultTemplates() {
@@ -577,10 +609,10 @@
     function applySelectedTemplate() {
       const selected = getSelectedTemplate();
       if (!selected) {
-        ideaInput.value = "";
+        ideaEditor.innerHTML = "";
         return;
       }
-      ideaInput.value = `${selected.subject} - ${selected.body}`;
+      setIdeaContent(selected.bodyHtml, selected.body);
       showToast("Šablona načtena pro e-mail.");
     }
 
@@ -612,7 +644,7 @@
 
     function buildEmail() {
       const language = languageInput.value;
-      const idea = ideaInput.value.trim();
+      const idea = getIdeaText().trim();
       if (language === "cz") {
         const shortIdea = idea ? toSentence(idea) : "Děkuji za zprávu a zájem.";
         return [
@@ -695,6 +727,9 @@
       saveTemplates();
       renderTemplates();
       resetTemplateEditor();
+      if (templateSelect.value) {
+        applySelectedTemplate();
+      }
       showToast("Šablona uložena.");
     });
 
@@ -740,6 +775,7 @@
       templateSelect.value = templates[templateIndex].id;
       templateEditSelect.value = templates[templateIndex].id;
       resetTemplateEditor();
+      applySelectedTemplate();
       showToast("Změny šablony uloženy.");
     });
 
@@ -767,7 +803,7 @@
     });
 
     generateBtn.addEventListener("click", function () {
-      ideaInput.value = buildEmail();
+      setIdeaContent("", buildEmail());
       showToast("E-mail vygenerován.");
     });
 
@@ -777,9 +813,10 @@
     });
 
     copyBtn.addEventListener("click", async function () {
-      if (!ideaInput.value.trim()) return;
+      const textToCopy = getIdeaText().trim();
+      if (!textToCopy) return;
       try {
-        await navigator.clipboard.writeText(ideaInput.value);
+        await navigator.clipboard.writeText(textToCopy);
         copyBtn.textContent = "Copied";
         showToast("Text zkopírován.");
         setTimeout(function () {
@@ -794,12 +831,12 @@
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      const text = ideaInput.value.trim();
+      const text = getIdeaText().trim();
       if (!text) {
-        ideaInput.value = buildEmail();
+        setIdeaContent("", buildEmail());
       }
 
-      const finalText = ideaInput.value.trim();
+      const finalText = getIdeaText().trim();
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
