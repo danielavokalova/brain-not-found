@@ -52,7 +52,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
       align-items: start;
     }
@@ -112,13 +112,8 @@
       margin: 0 0 10px;
     }
 
-    .templates-panel {
-      position: sticky;
-      top: 20px;
-    }
-
     .template-listbox {
-      min-height: 330px;
+      min-height: 240px;
       font-size: 0.98rem;
     }
 
@@ -173,27 +168,9 @@
     <p class="sub">Praktické rozložení: vlevo šablony, vpravo velké pracovní okno.</p>
 
     <section class="layout">
-      <aside class="panel templates-panel">
+      <aside class="panel">
         <h2>Šablony e-mailů</h2>
-        <p class="muted">Vyber šablonu z listboxu a klikni na použít.</p>
-
-        <section class="grid">
-          <label for="templateSelect">
-            Uložené šablony
-            <select id="templateSelect" class="template-listbox" size="12">
-            </select>
-          </label>
-
-          <div class="actions">
-            <button class="ghost" id="useTemplateBtn" type="button">Použít vybranou šablonu</button>
-            <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
-          </div>
-        </section>
-
-        <hr style="border:0;border-top:1px solid var(--border);margin:14px 0;" />
-
-        <h2>Nová šablona</h2>
-        <p class="muted">Definuj produkt, účel, subject a tělo.</p>
+        <p class="muted">Definuj produkt, účel, subject a tělo šablony. Uložené šablony se pak vybírají vpravo při tvorbě e-mailu.</p>
 
         <section class="grid">
           <label for="templateProduct">
@@ -218,6 +195,7 @@
 
           <div class="actions">
             <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
+            <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
           </div>
         </section>
       </aside>
@@ -234,6 +212,15 @@
               <option value="cz">CZ</option>
             </select>
           </label>
+
+          <label for="templateSelect">
+            Vyber šablonu
+            <select id="templateSelect" class="template-listbox" size="8"></select>
+          </label>
+
+          <div class="actions">
+            <button class="ghost" id="useTemplateBtn" type="button">Načíst šablonu do e-mailu</button>
+          </div>
 
           <label for="idea">
             Co chceš napsat
@@ -351,6 +338,33 @@
         return;
       }
       ideaInput.value = `${selected.subject} - ${selected.body}`;
+      resultOutput.value = buildEmailFromTemplate(selected);
+    }
+
+    function buildEmailFromTemplate(template) {
+      const language = languageInput.value;
+      if (language === "cz") {
+        return [
+          `Předmět: ${template.subject}`,
+          "",
+          "Dobrý den,",
+          "",
+          toSentence(template.body),
+          "",
+          "S pozdravem,",
+          "Daniela"
+        ].join("\n");
+      }
+      return [
+        `Subject: ${template.subject}`,
+        "",
+        "Hello,",
+        "",
+        toSentence(template.body),
+        "",
+        "Best regards,",
+        "Daniela"
+      ].join("\n");
     }
 
     function buildEmail() {
