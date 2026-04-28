@@ -656,6 +656,37 @@
         .trim();
     }
 
+    function getMailtoTextFromEditorHtml(editorEl) {
+      if (!editorEl) return "";
+      const temp = document.createElement("div");
+      temp.innerHTML = editorEl.innerHTML || "";
+
+      temp.querySelectorAll("li").forEach(function (li) {
+        li.prepend(document.createTextNode("• "));
+        li.appendChild(document.createTextNode("\n"));
+      });
+
+      temp.querySelectorAll("ul, ol").forEach(function (list) {
+        list.appendChild(document.createTextNode("\n"));
+      });
+
+      temp.querySelectorAll("br").forEach(function (el) {
+        el.replaceWith("\n");
+      });
+
+      temp.querySelectorAll("p, div").forEach(function (el) {
+        if (!el.textContent.endsWith("\n")) {
+          el.appendChild(document.createTextNode("\n"));
+        }
+      });
+
+      return (temp.textContent || "")
+        .replace(/\r\n/g, "\n")
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
     function setIdeaContent(htmlValue, plainValue) {
       if (htmlValue && htmlValue.trim()) {
         ideaEditor.innerHTML = htmlValue;
@@ -1038,12 +1069,12 @@
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      const text = getEditorPlainText(ideaEditor);
+      const text = getMailtoTextFromEditorHtml(ideaEditor);
       if (!text) {
         setIdeaContent("", buildEmail());
       }
 
-      const finalText = getEditorPlainText(ideaEditor);
+      const finalText = getMailtoTextFromEditorHtml(ideaEditor);
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
