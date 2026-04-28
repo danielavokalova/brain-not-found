@@ -697,6 +697,15 @@
       showToast("Šablona načtena do editoru.");
     }
 
+    function syncRightEditorFromLeftDraft() {
+      const draftBodyHtml = getTemplateBodyHtml();
+      const draftBodyText = getTemplateBodyText();
+      if (!draftBodyHtml && !draftBodyText) {
+        return;
+      }
+      setIdeaContent(draftBodyHtml, draftBodyText);
+    }
+
     function renderTemplates() {
       renderTemplateSelect();
     }
@@ -844,6 +853,8 @@
       const selected = getSelectedTemplateForEditor();
       if (!selected) return;
       fillEditorFromTemplate(selected);
+      templateSelect.value = selected.id;
+      applySelectedTemplate();
     });
 
     updateTemplateBtn.addEventListener("click", function () {
@@ -896,6 +907,20 @@
     templateEditSelect.addEventListener("change", function () {
       const selected = getSelectedTemplateForEditor();
       fillEditorFromTemplate(selected);
+      if (selected) {
+        templateSelect.value = selected.id;
+        applySelectedTemplate();
+      }
+    });
+
+    templateBodyEditor.addEventListener("input", function () {
+      if (!editingTemplateId) return;
+      syncRightEditorFromLeftDraft();
+    });
+
+    templateSubjectInput.addEventListener("input", function () {
+      if (!editingTemplateId) return;
+      syncRightEditorFromLeftDraft();
     });
 
     deleteSelectedBtn.addEventListener("click", function () {
