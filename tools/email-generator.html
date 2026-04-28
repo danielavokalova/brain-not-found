@@ -397,6 +397,10 @@
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="removeFormat">Tx</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertUnorderedList">• List</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦ Odsadit</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤ Předsadit</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-delta="-0.1">Řádky -</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-delta="0.1">Řádky +</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertParagraph">↵ New line</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
@@ -422,13 +426,8 @@
           <p class="section-label">Návrh e-mailu (editable)</p>
           <div class="editor-toolbar">
             <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="bold"><strong>B</strong></button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="removeFormat">Tx</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertUnorderedList">• List</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertOrderedList">1. List</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="indent">↦ Odsadit</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="outdent">↤ Předsadit</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-lineheight-delta="-0.1">Řádky -</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-lineheight-delta="0.1">Řádky +</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertUnorderedList">•</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertParagraph">↵</button>
           </div>
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
