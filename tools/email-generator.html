@@ -301,6 +301,8 @@
           </label>
 
           <div class="actions">
+            <button class="secondary" id="openGeminiBtn" type="button">Otevřít web scan asistenta</button>
+            <button class="secondary" id="importClipboardBtn" type="button">Import z clipboardu</button>
             <button class="ghost" id="generateFromAuditBtn" type="button">Vytvořit email z web auditu</button>
           </div>
 
@@ -336,6 +338,8 @@
     const ideaInput = document.getElementById("idea");
     const auditUrlInput = document.getElementById("auditUrl");
     const auditInput = document.getElementById("auditInput");
+    const openGeminiBtn = document.getElementById("openGeminiBtn");
+    const importClipboardBtn = document.getElementById("importClipboardBtn");
     const generateBtn = document.getElementById("generateBtn");
     const generateFromAuditBtn = document.getElementById("generateFromAuditBtn");
     const copyBtn = document.getElementById("copyBtn");
@@ -355,6 +359,7 @@
     let templates = [];
     let editingTemplateId = null;
     let toastTimer = null;
+    const GEMINI_ASSISTANT_URL = "https://gemini.google.com/gem/5bd8204b5ebd";
 
     function showToast(message) {
       if (!toast) return;
@@ -654,6 +659,21 @@
       ].join("\n");
     }
 
+    async function importAuditFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (!text || !text.trim()) {
+          showToast("Clipboard je prázdný.");
+          return;
+        }
+        auditInput.value = text.trim();
+        ideaInput.value = buildEmailFromAudit();
+        showToast("Načteno z clipboardu a e-mail připraven.");
+      } catch (error) {
+        showToast("Clipboard nelze načíst. Zkus Ctrl+V do pole auditu.");
+      }
+    }
+
     function resetTemplateEditor() {
       templateProductInput.value = "";
       templatePurposeInput.value = "";
@@ -761,6 +781,15 @@
     generateFromAuditBtn.addEventListener("click", function () {
       ideaInput.value = buildEmailFromAudit();
       showToast("E-mail z web auditu vygenerován.");
+    });
+
+    openGeminiBtn.addEventListener("click", function () {
+      window.open(GEMINI_ASSISTANT_URL, "_blank", "noopener,noreferrer");
+      showToast("Asistent otevřen v nové záložce.");
+    });
+
+    importClipboardBtn.addEventListener("click", function () {
+      importAuditFromClipboard();
     });
 
     copyBtn.addEventListener("click", async function () {
