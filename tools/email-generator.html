@@ -169,6 +169,7 @@
     .panel h2 {
       margin: 0 0 6px;
       font-size: 1.05rem;
+      font-weight: 700;
     }
 
     .muted {
@@ -179,8 +180,9 @@
 
     .template-select {
       min-height: auto;
-      height: 48px;
+      height: 40px;
       font-size: 0.98rem;
+      padding: 8px 10px;
     }
 
     .language-compact-select {
@@ -207,10 +209,12 @@
     button {
       border: 0;
       border-radius: 8px;
-      padding: 12px 18px;
+      padding: 10px 14px;
       font-weight: 600;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.92rem;
+      line-height: 1;
+      min-height: 36px;
     }
 
     .primary {
@@ -232,8 +236,8 @@
       background: #f3f4f6;
       color: #111827;
       border: 1px solid var(--border);
-      padding: 8px 12px;
-      font-size: 0.88rem;
+      padding: 8px 10px;
+      font-size: 0.86rem;
       font-weight: 600;
       border-radius: 8px;
     }
@@ -250,8 +254,8 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       background: #fff;
-      min-height: 320px;
-      height: 52vh;
+      min-height: 280px;
+      height: 48vh;
       padding: 12px;
       overflow: auto;
       font-size: 1rem;
@@ -275,6 +279,17 @@
       min-height: 0;
       overflow: auto;
       padding-right: 2px;
+    }
+
+    .editor-toolbar {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      background: #f9fafb;
+    }
+
+    .editor-toolbar .editor-btn {
+      min-height: 34px;
     }
 
     .footer {
