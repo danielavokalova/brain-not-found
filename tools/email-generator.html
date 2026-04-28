@@ -454,6 +454,8 @@
     function applySelectedTemplate() {
       const selected = getSelectedTemplate();
       if (!selected) {
+        ideaInput.value = "";
+        resultOutput.value = "";
         return;
       }
       ideaInput.value = `${selected.subject} - ${selected.body}`;
@@ -618,6 +620,8 @@
       applySelectedTemplate();
       if (templateSelect.value) {
         showToast("Šablona načtena pro e-mail.");
+      } else {
+        showToast("Výběr šablony zrušen.");
       }
     });
 
