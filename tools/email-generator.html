@@ -402,18 +402,13 @@
           <div class="editor-wrap">
             <div class="editor-toolbar">
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="bold"><strong>B</strong></button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="italic"><em>I</em></button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="underline"><u>U</u></button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="removeFormat">Tx</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertUnorderedList">• List</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦ Odsadit</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤ Předsadit</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.1">Vybrané 1.1</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.25">Vybrané 1.25</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-lineheight="1.4">Vybrané 1.4</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="narrow">Zúžit blok</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="normal">Normální blok</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-selection-style="compact">Menší mezery</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertParagraph">↵ New line</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
           </div>
@@ -439,8 +434,13 @@
           <p class="section-label">Návrh e-mailu (editable)</p>
           <div class="editor-toolbar">
             <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="bold"><strong>B</strong></button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertUnorderedList">•</button>
-            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertParagraph">↵</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="italic"><em>I</em></button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="underline"><u>U</u></button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="removeFormat">Tx</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertUnorderedList">• List</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertOrderedList">1. List</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="indent">↦</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="outdent">↤</button>
           </div>
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
@@ -794,54 +794,6 @@
           body: "Hello [Name],\n\nthank you for your message and trust.\nAfter consideration, I am unable to confirm this collaboration at the moment.\n\nI do not want to commit to a timeline I cannot reliably meet right now.\nIf helpful, I can recommend an alternative.\n\nThank you for your understanding,\nDaniela",
           bodyHtml: "<p>Hello [Name],</p><p>thank you for your message and trust.<br>After consideration, I am unable to confirm this collaboration at the moment.</p><p>I do not want to commit to a timeline I cannot reliably meet right now.<br>If helpful, I can recommend an alternative.</p><p>Thank you for your understanding,<br>Daniela</p>"
         },
-        {
-          id: base + "-7",
-          product: "AI konzultace",
-          purpose: "Odpověď na zájem (přátelsky)",
-          subject: "Díky za zájem",
-          body: "Ahoj [Jméno],\n\ndíky za zprávu a zájem o [služba/produkt].\nRáda se na to podívám víc do hloubky.\n\nMohla bys/mohl bys mi prosím poslat:\n• co přesně potřebuješ,\n• ideální časový rámec,\n• a rozpočet (pokud ho máš)?\n\nPak navrhnu další postup.\n\nDíky moc,\nDaniela",
-          bodyHtml: "<p>Ahoj [Jméno],</p><p>díky za zprávu a zájem o [služba/produkt].<br>Ráda se na to podívám víc do hloubky.</p><p>Mohla bys/mohl bys mi prosím poslat:</p><ul><li>co přesně potřebuješ,</li><li>ideální časový rámec,</li><li>a rozpočet (pokud ho máš)?</li></ul><p>Pak navrhnu další postup.</p><p>Díky moc,<br>Daniela</p>"
-        },
-        {
-          id: base + "-8",
-          product: "AI konzultace",
-          purpose: "Odpověď na zájem (formálně)",
-          subject: "Děkuji za zájem",
-          body: "Dobrý den [Jméno],\n\ndíky za zájem o [služba/produkt].\nRáda navrhnu nejlepší další postup.\n\nAby mohla připravit konkrétní návrh, prosím pošlete:\n• co přesně potřebujete,\n• preferovaný časový rámec,\n• a rozpočet (pokud jej máte).\n\nJakmile budu mít tyto informace, ozvím se s jasným návrhem.\n\nS pozdravem,\nDaniela",
-          bodyHtml: "<p>Dobrý den [Jméno],</p><p>díky za zájem o [služba/produkt].<br>Ráda navrhnu nejlepší další postup.</p><p>Aby mohla připravit konkrétní návrh, prosím pošlete:</p><ul><li>co přesně potřebujete,</li><li>preferovaný časový rámec,</li><li>a rozpočet (pokud jej máte).</li></ul><p>Jakmile budu mít tyto informace, ozvím se s jasným návrhem.</p><p>S pozdravem,<br>Daniela</p>"
-        },
-        {
-          id: base + "-9",
-          product: "AI konzultace",
-          purpose: "Follow-up připomenutí (přátelsky)",
-          subject: "Krátké připomenutí",
-          body: "Ahoj [Jméno],\n\njen navazuji na předchozí e-mail ohledně [téma].\nJe to stále aktuální?\n\nPokud ano, stačí odpovědět a navrhnu další krok.\n\nDíky a hezký den,\nDaniela",
-          bodyHtml: "<p>Ahoj [Jméno],</p><p>jen navazuji na předchozí e-mail ohledně [téma].<br>Je to stále aktuální?</p><p>Pokud ano, stačí odpovědět a navrhnu další krok.</p><p>Díky a hezký den,<br>Daniela</p>"
-        },
-        {
-          id: base + "-10",
-          product: "AI konzultace",
-          purpose: "Follow-up připomenutí (formálně)",
-          subject: "Navazuji na předchozí e-mail",
-          body: "Dobrý den [Jméno],\n\nnavazuji na předchozí e-mail ohledně [téma].\nJe to stále aktuální z vaší strany?\n\nPokud ano, ráda navrhnu další krok.\n\nDěkuji a přeji hezký den,\nDaniela",
-          bodyHtml: "<p>Dobrý den [Jméno],</p><p>navazuji na předchozí e-mail ohledně [téma].<br>Je to stále aktuální z vaší strany?</p><p>Pokud ano, ráda navrhnu další krok.</p><p>Děkuji a přeji hezký den,<br>Daniela</p>"
-        },
-        {
-          id: base + "-11",
-          product: "AI konzultace",
-          purpose: "Zdvořilé odmítnutí (přátelsky)",
-          subject: "Díky za oslovení",
-          body: "Ahoj [Jméno],\n\ndíky za zprávu.\nBohužel to teď nemůžu vzít na sebe.\n\nNechci slibovat něco, co nedokážu dodat ve správné kvalitě a čase.\nPokud chceš, mohu doporučit někoho jiného.\n\nDíky za pochopení,\nDaniela",
-          bodyHtml: "<p>Ahoj [Jméno],</p><p>díky za zprávu.<br>Bohužel to teď nemůžu vzít na sebe.</p><p>Nechci slibovat něco, co nedokážu dodat ve správné kvalitě a čase.<br>Pokud chceš, mohu doporučit někoho jiného.</p><p>Díky za pochopení,<br>Daniela</p>"
-        },
-        {
-          id: base + "-12",
-          product: "AI konzultace",
-          purpose: "Zdvořilé odmítnutí (formálně)",
-          subject: "Děkuji za nabídku",
-          body: "Dobrý den [Jméno],\n\ndíky za zprávu a důvěru.\nPo zvážení bohužel nemohu tuto spolupráci potvrdit.\n\nNechci se zavazovat k termínu, který v tuto chvíli nemohu spolehlivě splnit.\nPokud by pomohlo, mohu doporučit alternativu.\n\nDěkuji za pochopení,\nDaniela",
-          bodyHtml: "<p>Dobrý den [Jméno],</p><p>díky za zprávu a důvěru.<br>Po zvážení bohužel nemohu tuto spolupráci potvrdit.</p><p>Nechci se zavazovat k termínu, který v tuto chvíli nemohu spolehlivě splnit.<br>Pokud by pomohlo, mohu doporučit alternativu.</p><p>Děkuji za pochopení,<br>Daniela</p>"
-        }
       ];
     }
 
@@ -1213,29 +1165,9 @@
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
-      const formattedHtml = buildEmailHtmlFromEditor();
       const subject = parts.subject || "Email";
       const plainBody = parts.body || finalText;
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}`;
-
-      // Copy rich text too for quick paste into already-open drafts.
-      if (navigator.clipboard && window.ClipboardItem && formattedHtml) {
-        const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
-        const textBlob = new Blob([plainBody], { type: "text/plain" });
-        navigator.clipboard.write([
-          new ClipboardItem({
-            "text/html": htmlBlob,
-            "text/plain": textBlob
-          })
-        ]).then(function () {
-          window.location.href = mailtoUrl;
-          showToast("Otevřen nový e-mail. Vlož Ctrl+V pro přesný vzhled.");
-        }).catch(function () {
-          window.location.href = mailtoUrl;
-          showToast("Otevřen nový e-mail. V případě potřeby vlož Ctrl+V.");
-        });
-        return;
-      }
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainBody)}`;
       window.location.href = mailtoUrl;
       showToast("Otevřen nový e-mail.");
     });
@@ -1245,60 +1177,6 @@
         const editorId = btn.getAttribute("data-editor-target");
         const targetEditor = getEditorById(editorId);
         if (!targetEditor) return;
-
-        const selectedLineHeight = btn.getAttribute("data-selection-lineheight");
-        if (selectedLineHeight) {
-          const ok = applyStyleToSelection(targetEditor, {
-            lineHeight: selectedLineHeight
-          });
-          showToast(ok ? `Řádkování výběru ${selectedLineHeight}.` : "Nejdřív označ text.");
-          return;
-        }
-
-        const selectionStyle = btn.getAttribute("data-selection-style");
-        if (selectionStyle) {
-          let styleToApply = null;
-          if (selectionStyle === "narrow") {
-            styleToApply = {
-              display: "inline-block",
-              maxWidth: "620px",
-              width: "100%"
-            };
-          } else if (selectionStyle === "normal") {
-            styleToApply = {
-              display: "inline",
-              maxWidth: "none",
-              width: "auto",
-              margin: "0"
-            };
-          } else if (selectionStyle === "compact") {
-            styleToApply = {
-              lineHeight: "1.2"
-            };
-          }
-          const ok = styleToApply ? applyStyleToSelection(targetEditor, styleToApply) : false;
-          showToast(ok ? "Styl použit na výběr." : "Nejdřív označ text.");
-          return;
-        }
-
-        const lineValue = btn.getAttribute("data-lineheight-value");
-        if (lineValue) {
-          setEditorLineHeight(targetEditor, lineValue);
-          return;
-        }
-
-        const lineDelta = btn.getAttribute("data-lineheight-delta");
-        if (lineDelta) {
-          adjustEditorLineHeight(targetEditor, parseFloat(lineDelta));
-          return;
-        }
-
-        const compactSpacing = btn.getAttribute("data-compact-spacing");
-        if (compactSpacing === "toggle") {
-          toggleCompactSpacing(targetEditor);
-          return;
-        }
-
         const cmd = btn.getAttribute("data-editor-cmd");
         if (!cmd) return;
         targetEditor.focus();
