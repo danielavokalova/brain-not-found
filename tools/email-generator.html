@@ -751,6 +751,57 @@
 </html>`;
     }
 
+    function encodeSubjectForMime(subject) {
+      const utf8Bytes = new TextEncoder().encode(subject);
+      let binary = "";
+      utf8Bytes.forEach(function (b) {
+        binary += String.fromCharCode(b);
+      });
+      return "=?UTF-8?B?" + btoa(binary) + "?=";
+    }
+
+    function buildEmlDraft(subject, htmlBody, plainBody) {
+      const boundary = "----=_BrainNotFound_" + Date.now();
+      const safeSubject = encodeSubjectForMime(subject || "Email");
+      const textPart = (plainBody || "").replace(/\n/g, "\r\n");
+      const htmlPart = (htmlBody || "").replace(/\n/g, "\r\n");
+
+      return [
+        "MIME-Version: 1.0",
+        "Subject: " + safeSubject,
+        "Content-Type: multipart/alternative; boundary=\"" + boundary + "\"",
+        "",
+        "--" + boundary,
+        "Content-Type: text/plain; charset=\"UTF-8\"",
+        "Content-Transfer-Encoding: 8bit",
+        "",
+        textPart,
+        "",
+        "--" + boundary,
+        "Content-Type: text/html; charset=\"UTF-8\"",
+        "Content-Transfer-Encoding: 8bit",
+        "",
+        htmlPart,
+        "",
+        "--" + boundary + "--",
+        ""
+      ].join("\r\n");
+    }
+
+    function downloadEmlDraft(filename, content) {
+      const blob = new Blob([content], { type: "message/rfc822;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    }
+
 
     function resetTemplateEditor() {
       templateProductInput.value = "";
@@ -900,9 +951,10 @@
       const formattedHtml = buildEmailHtmlFromEditor();
       const subject = parts.subject || "Email";
       const plainBody = parts.body || finalText;
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainBody)}`;
+      const emlContent = buildEmlDraft(subject, formattedHtml || finalText, plainBody);
+      downloadEmlDraft("email-draft.eml", emlContent);
 
-      // mailto prefills plain text; clipboard adds rich formatting for paste.
+      // Also copy rich text for quick paste into existing compose windows.
       if (navigator.clipboard && window.ClipboardItem && formattedHtml) {
         const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
         const textBlob = new Blob([plainBody], { type: "text/plain" });
@@ -912,17 +964,13 @@
             "text/plain": textBlob
           })
         ]).then(function () {
-          window.location.href = mailtoUrl;
-          showToast("Draft otevřen. Pro formát vlož Ctrl+V.");
+          showToast("Hotový draft .eml stažen (formát zachován).");
         }).catch(function () {
-          window.location.href = mailtoUrl;
-          showToast("Otevírám e-mail klienta.");
+          showToast("Draft .eml stažen.");
         });
         return;
       }
-
-      window.location.href = mailtoUrl;
-      showToast("Otevírám e-mail klienta.");
+      showToast("Hotový draft .eml stažen (formát zachován).");
     });
 
     editorButtons.forEach(function (btn) {
