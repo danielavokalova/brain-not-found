@@ -183,6 +183,16 @@
       font-size: 0.98rem;
     }
 
+    .language-compact {
+      max-width: 130px;
+    }
+
+    .language-compact select {
+      height: 38px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+
     .actions {
       display: flex;
       gap: 10px;
@@ -345,7 +355,7 @@
             <select id="templateSelect" class="template-select"></select>
           </label>
 
-          <label for="language">
+          <label for="language" class="language-compact">
             Language
             <select id="language">
               <option value="en">EN</option>
