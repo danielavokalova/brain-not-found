@@ -112,6 +112,47 @@
       height: 34vh;
     }
 
+    .editor-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .editor-btn {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: #111827;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .rich-editor {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      min-height: 220px;
+      height: 34vh;
+      padding: 12px;
+      overflow: auto;
+      font-size: 1rem;
+      line-height: 1.5;
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .rich-editor:empty::before {
+      content: attr(data-placeholder);
+      color: #9ca3af;
+    }
+
     .panel {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -274,10 +315,17 @@
             <input id="templateSubject" placeholder="Např. Quick follow-up after our call" />
           </label>
 
-          <label for="templateBody">
-            Tělo e-mailu
-            <textarea id="templateBody" class="small-textarea" placeholder="Sem napiš základ šablony e-mailu..."></textarea>
-          </label>
+          <label for="templateBodyEditor">Tělo e-mailu</label>
+          <div class="editor-wrap">
+            <div class="editor-toolbar">
+              <button class="editor-btn" type="button" data-editor-cmd="bold"><strong>B</strong></button>
+              <button class="editor-btn" type="button" data-editor-cmd="removeFormat">Tx</button>
+              <button class="editor-btn" type="button" data-editor-cmd="insertUnorderedList">• List</button>
+              <button class="editor-btn" type="button" data-editor-cmd="insertOrderedList">1. List</button>
+              <button class="editor-btn" type="button" data-editor-cmd="insertParagraph">↵ New line</button>
+            </div>
+            <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
+          </div>
         </section>
         <div class="actions panel-actions">
           <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
@@ -341,13 +389,14 @@
     const templateProductInput = document.getElementById("templateProduct");
     const templatePurposeInput = document.getElementById("templatePurpose");
     const templateSubjectInput = document.getElementById("templateSubject");
-    const templateBodyInput = document.getElementById("templateBody");
+    const templateBodyEditor = document.getElementById("templateBodyEditor");
     const saveTemplateBtn = document.getElementById("saveTemplateBtn");
     const loadTemplateToEditorBtn = document.getElementById("loadTemplateToEditorBtn");
     const updateTemplateBtn = document.getElementById("updateTemplateBtn");
     const templateSelect = document.getElementById("templateSelect");
     const templateEditSelect = document.getElementById("templateEditSelect");
     const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
+    const editorButtons = document.querySelectorAll("[data-editor-cmd]");
     const toast = document.getElementById("toast");
 
     let templates = [];
@@ -371,6 +420,58 @@
       const trimmed = value.trim();
       if (!trimmed) return "";
       return /[.!?]$/.test(trimmed) ? trimmed : trimmed + ".";
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function htmlToPlainText(html) {
+      const temp = document.createElement("div");
+      temp.innerHTML = html || "";
+
+      temp.querySelectorAll("br").forEach(function (el) {
+        el.replaceWith("\n");
+      });
+
+      temp.querySelectorAll("p, div").forEach(function (el) {
+        if (!el.textContent.endsWith("\n")) {
+          el.appendChild(document.createTextNode("\n"));
+        }
+      });
+
+      temp.querySelectorAll("li").forEach(function (li) {
+        li.prepend(document.createTextNode("- "));
+        li.appendChild(document.createTextNode("\n"));
+      });
+
+      const text = temp.textContent || "";
+      return text
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
+    function getTemplateBodyHtml() {
+      return (templateBodyEditor.innerHTML || "").trim();
+    }
+
+    function getTemplateBodyText() {
+      return htmlToPlainText(getTemplateBodyHtml());
+    }
+
+    function setTemplateBodyContent(bodyHtml, bodyText) {
+      if (bodyHtml && bodyHtml.trim()) {
+        templateBodyEditor.innerHTML = bodyHtml;
+        return;
+      }
+      if (bodyText && bodyText.trim()) {
+        templateBodyEditor.innerHTML = escapeHtml(bodyText).replace(/\n/g, "<br>");
+        return;
+      }
+      templateBodyEditor.innerHTML = "";
     }
 
     function getDefaultTemplates() {
@@ -458,7 +559,7 @@
       templateProductInput.value = template.product;
       templatePurposeInput.value = template.purpose;
       templateSubjectInput.value = template.subject;
-      templateBodyInput.value = template.body;
+      setTemplateBodyContent(template.bodyHtml, template.body);
       showToast("Šablona načtena do editoru.");
     }
 
@@ -559,7 +660,7 @@
       templateProductInput.value = "";
       templatePurposeInput.value = "";
       templateSubjectInput.value = "";
-      templateBodyInput.value = "";
+      templateBodyEditor.innerHTML = "";
       editingTemplateId = null;
     }
 
@@ -567,7 +668,8 @@
       const product = templateProductInput.value.trim();
       const purpose = templatePurposeInput.value.trim();
       const subject = templateSubjectInput.value.trim();
-      const body = templateBodyInput.value.trim();
+      const bodyHtml = getTemplateBodyHtml();
+      const body = getTemplateBodyText();
 
       if (!product || !purpose || !subject || !body) {
         alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
@@ -579,7 +681,8 @@
         product: product,
         purpose: purpose,
         subject: subject,
-        body: body
+        body: body,
+        bodyHtml: bodyHtml
       });
 
       saveTemplates();
@@ -603,7 +706,8 @@
       const product = templateProductInput.value.trim();
       const purpose = templatePurposeInput.value.trim();
       const subject = templateSubjectInput.value.trim();
-      const body = templateBodyInput.value.trim();
+      const bodyHtml = getTemplateBodyHtml();
+      const body = getTemplateBodyText();
 
       if (!product || !purpose || !subject || !body) {
         alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
@@ -620,7 +724,8 @@
         product: product,
         purpose: purpose,
         subject: subject,
-        body: body
+        body: body,
+        bodyHtml: bodyHtml
       };
 
       saveTemplates();
@@ -694,6 +799,14 @@
       const mailtoUrl = `mailto:?subject=${encodeURIComponent(parts.subject || "Email")}&body=${encodeURIComponent(parts.body || finalText)}`;
       window.location.href = mailtoUrl;
       showToast("Otevírám e-mail klienta.");
+    });
+
+    editorButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const cmd = btn.getAttribute("data-editor-cmd");
+        templateBodyEditor.focus();
+        document.execCommand(cmd, false);
+      });
     });
 
     loadTemplates();
