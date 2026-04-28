@@ -647,6 +647,15 @@
       return htmlToPlainText(getIdeaHtml());
     }
 
+    function getEditorPlainText(editorEl) {
+      if (!editorEl) return "";
+      const text = editorEl.innerText || "";
+      return text
+        .replace(/\r\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
     function setIdeaContent(htmlValue, plainValue) {
       if (htmlValue && htmlValue.trim()) {
         ideaEditor.innerHTML = htmlValue;
@@ -1029,12 +1038,12 @@
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      const text = getIdeaText().trim();
+      const text = getEditorPlainText(ideaEditor);
       if (!text) {
         setIdeaContent("", buildEmail());
       }
 
-      const finalText = getIdeaText().trim();
+      const finalText = getEditorPlainText(ideaEditor);
       if (!finalText) return;
 
       const parts = parseEmailParts(finalText);
