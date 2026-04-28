@@ -1123,7 +1123,7 @@
       const formattedHtml = buildEmailHtmlFromEditor();
       const subject = parts.subject || "Email";
       const plainBody = parts.body || finalText;
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainBody)}`;
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}`;
 
       // Copy rich text too for quick paste into already-open drafts.
       if (navigator.clipboard && window.ClipboardItem && formattedHtml) {
@@ -1136,10 +1136,10 @@
           })
         ]).then(function () {
           window.location.href = mailtoUrl;
-          showToast("Otevřen nový e-mail. Vlož Ctrl+V pro 1:1 vzhled.");
+          showToast("Otevřen nový e-mail. Vlož Ctrl+V pro přesný vzhled.");
         }).catch(function () {
           window.location.href = mailtoUrl;
-          showToast("Otevřen nový e-mail.");
+          showToast("Otevřen nový e-mail. V případě potřeby vlož Ctrl+V.");
         });
         return;
       }
