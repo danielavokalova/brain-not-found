@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Generator - Brain Not Found</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 700px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+    }
+
+    .sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Email Generator</h1>
+    <p class="sub">Napiš jednu větu a za 5 sekund máš hotový e-mail.</p>
+
+    <section class="grid">
+      <label for="idea">
+        Co chceš napsat
+        <textarea id="idea" placeholder="Např.: Poděkuj klientovi za zájem a navrhni krátký call příští týden."></textarea>
+      </label>
+
+      <div class="actions">
+        <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
+      </div>
+
+      <label for="result">Výsledek
+        <textarea id="result" readonly placeholder="Vygenerovaný e-mail se zobrazí tady"></textarea>
+      </label>
+
+      <div class="actions">
+        <button class="secondary" id="copyBtn" type="button">Copy</button>
+      </div>
+    </section>
+
+    <a class="back" href="/index.html">Zpět na dashboard</a>
+  </main>
+
+  <script>
+    const ideaInput = document.getElementById("idea");
+    const resultOutput = document.getElementById("result");
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+
+    function toSentence(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return "";
+      return /[.!?]$/.test(trimmed) ? trimmed : trimmed + ".";
+    }
+
+    function buildEmail() {
+      const idea = ideaInput.value.trim();
+      const shortIdea = idea ? toSentence(idea) : "Děkuji za zprávu a zájem.";
+      return [
+        "Předmět: Krátká reakce",
+        "",
+        "Dobrý den,",
+        "",
+        shortIdea,
+        "Ráda navrhnu krátký další krok, který vám bude časově vyhovovat.",
+        "Když budete chtít, pošlu hned konkrétní termíny.",
+        "",
+        "S pozdravem,",
+        "Daniela"
+      ].join("\n");
+    }
+
+    generateBtn.addEventListener("click", function () {
+      resultOutput.value = buildEmail();
+    });
+
+    copyBtn.addEventListener("click", async function () {
+      if (!resultOutput.value.trim()) return;
+      try {
+        await navigator.clipboard.writeText(resultOutput.value);
+        copyBtn.textContent = "Copied";
+        setTimeout(function () {
+          copyBtn.textContent = "Copy";
+        }, 1200);
+      } catch (error) {
+        copyBtn.textContent = "Copy failed";
+        setTimeout(function () {
+          copyBtn.textContent = "Copy";
+        }, 1500);
+      }
+    });
+  </script>
+</body>
+</html>
