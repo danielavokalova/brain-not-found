@@ -55,6 +55,18 @@
       gap: 12px;
     }
 
+    .grid.two-col {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .grid.two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
     label {
       display: grid;
       gap: 6px;
@@ -63,6 +75,7 @@
     }
 
     select,
+    input,
     textarea {
       width: 100%;
       border: 1px solid var(--border);
@@ -78,6 +91,28 @@
       resize: vertical;
       font-size: 1.05rem;
       line-height: 1.45;
+    }
+
+    .small-textarea {
+      min-height: 120px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: #fcfdff;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0 0 10px;
     }
 
     .actions {
@@ -106,12 +141,41 @@
       color: #111827;
     }
 
+    .ghost {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
     .back {
       display: inline-block;
       margin-top: 12px;
       color: var(--accent);
       text-decoration: none;
       font-size: 0.9rem;
+    }
+
+    .template-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .template-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .template-title {
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .template-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0 0 8px;
     }
   </style>
 </head>
@@ -120,30 +184,76 @@
     <h1>Email Generator</h1>
     <p class="sub">Write one line and get a ready email in 5 seconds.</p>
 
-    <section class="grid">
-      <label for="language">
-        Language
-        <select id="language">
-          <option value="en">EN</option>
-          <option value="cz">CZ</option>
-        </select>
-      </label>
+    <section class="grid two-col">
+      <div class="panel">
+        <h2>Rychlé vytvoření e-mailu</h2>
+        <p class="muted">Vyber jazyk, napiš zadání nebo použij uloženou šablonu.</p>
 
-      <label for="idea">
-        Co chceš napsat
-        <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
-      </label>
+        <section class="grid">
+          <label for="language">
+            Language
+            <select id="language">
+              <option value="en">EN</option>
+              <option value="cz">CZ</option>
+            </select>
+          </label>
 
-      <div class="actions">
-        <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
+          <label for="idea">
+            Co chceš napsat
+            <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
+            <button class="ghost" id="useTemplateBtn" type="button">Použít vybranou šablonu</button>
+          </div>
+
+          <label for="result">Výsledek
+            <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="secondary" id="copyBtn" type="button">Copy</button>
+          </div>
+        </section>
       </div>
 
-      <label for="result">Výsledek
-        <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
-      </label>
+      <div class="panel">
+        <h2>Správa šablon</h2>
+        <p class="muted">Nastav si vlastní šablony a pak je vytáhni jedním klikem.</p>
 
-      <div class="actions">
-        <button class="secondary" id="copyBtn" type="button">Copy</button>
+        <section class="grid">
+          <label for="templateProduct">
+            Produkt
+            <input id="templateProduct" placeholder="Např. AI konzultace" />
+          </label>
+
+          <label for="templatePurpose">
+            Účel
+            <input id="templatePurpose" placeholder="Např. Follow-up po callu" />
+          </label>
+
+          <label for="templateSubject">
+            Subject
+            <input id="templateSubject" placeholder="Např. Quick follow-up after our call" />
+          </label>
+
+          <label for="templateBody">
+            Tělo e-mailu
+            <textarea id="templateBody" class="small-textarea" placeholder="Sem napiš základ šablony e-mailu..."></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
+          </div>
+
+          <label for="templateSelect">
+            Vyber šablonu
+            <select id="templateSelect"></select>
+          </label>
+        </section>
+
+        <div id="templateList" class="template-list"></div>
       </div>
     </section>
 
@@ -151,16 +261,146 @@
   </main>
 
   <script>
+    const STORAGE_KEY = "brain-not-found-email-templates";
+
     const languageInput = document.getElementById("language");
     const ideaInput = document.getElementById("idea");
     const resultOutput = document.getElementById("result");
     const generateBtn = document.getElementById("generateBtn");
+    const useTemplateBtn = document.getElementById("useTemplateBtn");
     const copyBtn = document.getElementById("copyBtn");
+    const templateProductInput = document.getElementById("templateProduct");
+    const templatePurposeInput = document.getElementById("templatePurpose");
+    const templateSubjectInput = document.getElementById("templateSubject");
+    const templateBodyInput = document.getElementById("templateBody");
+    const saveTemplateBtn = document.getElementById("saveTemplateBtn");
+    const templateSelect = document.getElementById("templateSelect");
+    const templateList = document.getElementById("templateList");
+
+    let templates = [];
 
     function toSentence(value) {
       const trimmed = value.trim();
       if (!trimmed) return "";
       return /[.!?]$/.test(trimmed) ? trimmed : trimmed + ".";
+    }
+
+    function getDefaultTemplates() {
+      return [
+        {
+          id: Date.now().toString() + "-1",
+          product: "Service",
+          purpose: "Reply to interest",
+          subject: "Thanks for your interest",
+          body: "Thank you for your interest. I would be happy to suggest the next step that fits your timeline."
+        },
+        {
+          id: Date.now().toString() + "-2",
+          product: "Služba",
+          purpose: "Připomenutí",
+          subject: "Krátké připomenutí",
+          body: "Jen navazuji na předchozí zprávu. Pokud je to stále aktuální, ráda navrhnu další postup."
+        }
+      ];
+    }
+
+    function loadTemplates() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        templates = getDefaultTemplates();
+        saveTemplates();
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        templates = Array.isArray(parsed) ? parsed : getDefaultTemplates();
+      } catch (error) {
+        templates = getDefaultTemplates();
+      }
+    }
+
+    function saveTemplates() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
+    }
+
+    function renderTemplateSelect() {
+      templateSelect.innerHTML = "";
+      templates.forEach(function (tpl) {
+        const option = document.createElement("option");
+        option.value = tpl.id;
+        option.textContent = `${tpl.product} - ${tpl.purpose}`;
+        templateSelect.appendChild(option);
+      });
+      if (templates.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Žádná šablona";
+        templateSelect.appendChild(option);
+      }
+    }
+
+    function removeTemplate(id) {
+      templates = templates.filter(function (tpl) {
+        return tpl.id !== id;
+      });
+      saveTemplates();
+      renderTemplates();
+    }
+
+    function renderTemplates() {
+      renderTemplateSelect();
+      templateList.innerHTML = "";
+
+      templates.forEach(function (tpl) {
+        const item = document.createElement("div");
+        item.className = "template-item";
+
+        const title = document.createElement("p");
+        title.className = "template-title";
+        title.textContent = tpl.subject || `${tpl.product} - ${tpl.purpose}`;
+
+        const meta = document.createElement("p");
+        meta.className = "template-meta";
+        meta.textContent = `${tpl.product} | ${tpl.purpose}`;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const useBtn = document.createElement("button");
+        useBtn.className = "ghost";
+        useBtn.type = "button";
+        useBtn.textContent = "Použít";
+        useBtn.addEventListener("click", function () {
+          templateSelect.value = tpl.id;
+          applySelectedTemplate();
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "secondary";
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "Smazat";
+        deleteBtn.addEventListener("click", function () {
+          removeTemplate(tpl.id);
+        });
+
+        actions.appendChild(useBtn);
+        actions.appendChild(deleteBtn);
+        item.appendChild(title);
+        item.appendChild(meta);
+        item.appendChild(actions);
+        templateList.appendChild(item);
+      });
+    }
+
+    function applySelectedTemplate() {
+      const selectedId = templateSelect.value;
+      const selected = templates.find(function (tpl) {
+        return tpl.id === selectedId;
+      });
+      if (!selected) {
+        return;
+      }
+      ideaInput.value = `${selected.subject} - ${selected.body}`;
     }
 
     function buildEmail() {
@@ -197,6 +437,38 @@
       ].join("\n");
     }
 
+    saveTemplateBtn.addEventListener("click", function () {
+      const product = templateProductInput.value.trim();
+      const purpose = templatePurposeInput.value.trim();
+      const subject = templateSubjectInput.value.trim();
+      const body = templateBodyInput.value.trim();
+
+      if (!product || !purpose || !subject || !body) {
+        alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
+        return;
+      }
+
+      templates.unshift({
+        id: Date.now().toString(),
+        product: product,
+        purpose: purpose,
+        subject: subject,
+        body: body
+      });
+
+      saveTemplates();
+      renderTemplates();
+
+      templateProductInput.value = "";
+      templatePurposeInput.value = "";
+      templateSubjectInput.value = "";
+      templateBodyInput.value = "";
+    });
+
+    useTemplateBtn.addEventListener("click", function () {
+      applySelectedTemplate();
+    });
+
     generateBtn.addEventListener("click", function () {
       resultOutput.value = buildEmail();
     });
@@ -216,6 +488,9 @@
         }, 1500);
       }
     });
+
+    loadTemplates();
+    renderTemplates();
   </script>
 </body>
 </html>
