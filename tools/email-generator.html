@@ -149,6 +149,12 @@
       margin-top: 4px;
     }
 
+    .panel-actions {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
     button {
       border: 0;
       border-radius: 8px;
@@ -231,12 +237,11 @@
             Tělo e-mailu
             <textarea id="templateBody" class="small-textarea" placeholder="Sem napiš základ šablony e-mailu..."></textarea>
           </label>
-
-          <div class="actions">
-            <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
-            <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
-          </div>
         </section>
+        <div class="actions panel-actions">
+          <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
+          <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
+        </div>
       </aside>
 
       <section class="panel workspace">
@@ -266,18 +271,14 @@
             <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
           </label>
 
-          <div class="actions">
-            <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
-          </div>
-
           <label for="result">Výsledek
             <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
           </label>
-
-          <div class="actions">
-            <button class="secondary" id="copyBtn" type="button">Copy</button>
-          </div>
         </section>
+        <div class="actions panel-actions">
+          <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
+          <button class="secondary" id="copyBtn" type="button">Copy</button>
+        </div>
       </section>
 
     </section>
