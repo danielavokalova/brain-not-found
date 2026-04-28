@@ -24,19 +24,14 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
+      padding: 0;
     }
 
     .card {
-      width: 100%;
-      max-width: 980px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      width: 100vw;
+      min-height: 100vh;
+      background: var(--bg);
+      padding: 20px;
     }
 
     h1 {
@@ -55,14 +50,15 @@
       gap: 12px;
     }
 
-    .grid.two-col {
-      grid-template-columns: 1fr 1fr;
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
       gap: 16px;
       align-items: start;
     }
 
-    @media (max-width: 900px) {
-      .grid.two-col {
+    @media (max-width: 1100px) {
+      .layout {
         grid-template-columns: 1fr;
       }
     }
@@ -101,7 +97,8 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 14px;
-      background: #fcfdff;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
     }
 
     .panel h2 {
@@ -113,6 +110,16 @@
       color: var(--muted);
       font-size: 0.95rem;
       margin: 0 0 10px;
+    }
+
+    .templates-panel {
+      position: sticky;
+      top: 20px;
+    }
+
+    .template-listbox {
+      min-height: 330px;
+      font-size: 0.98rem;
     }
 
     .actions {
@@ -154,73 +161,39 @@
       font-size: 0.9rem;
     }
 
-    .template-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .template-item {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px;
-      background: #fff;
-    }
-
-    .template-title {
-      font-weight: 700;
-      margin: 0 0 4px;
-    }
-
-    .template-meta {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin: 0 0 8px;
+    .workspace textarea#idea,
+    .workspace textarea#result {
+      min-height: 280px;
     }
   </style>
 </head>
 <body>
   <main class="card">
     <h1>Email Generator</h1>
-    <p class="sub">Write one line and get a ready email in 5 seconds.</p>
+    <p class="sub">Praktické rozložení: vlevo šablony, vpravo velké pracovní okno.</p>
 
-    <section class="grid two-col">
-      <div class="panel">
-        <h2>Rychlé vytvoření e-mailu</h2>
-        <p class="muted">Vyber jazyk, napiš zadání nebo použij uloženou šablonu.</p>
+    <section class="layout">
+      <aside class="panel templates-panel">
+        <h2>Šablony e-mailů</h2>
+        <p class="muted">Vyber šablonu z listboxu a klikni na použít.</p>
 
         <section class="grid">
-          <label for="language">
-            Language
-            <select id="language">
-              <option value="en">EN</option>
-              <option value="cz">CZ</option>
+          <label for="templateSelect">
+            Uložené šablony
+            <select id="templateSelect" class="template-listbox" size="12">
             </select>
           </label>
 
-          <label for="idea">
-            Co chceš napsat
-            <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
-          </label>
-
           <div class="actions">
-            <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
             <button class="ghost" id="useTemplateBtn" type="button">Použít vybranou šablonu</button>
-          </div>
-
-          <label for="result">Výsledek
-            <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
-          </label>
-
-          <div class="actions">
-            <button class="secondary" id="copyBtn" type="button">Copy</button>
+            <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
           </div>
         </section>
-      </div>
 
-      <div class="panel">
-        <h2>Správa šablon</h2>
-        <p class="muted">Nastav si vlastní šablony a pak je vytáhni jedním klikem.</p>
+        <hr style="border:0;border-top:1px solid var(--border);margin:14px 0;" />
+
+        <h2>Nová šablona</h2>
+        <p class="muted">Definuj produkt, účel, subject a tělo.</p>
 
         <section class="grid">
           <label for="templateProduct">
@@ -246,15 +219,41 @@
           <div class="actions">
             <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
           </div>
-
-          <label for="templateSelect">
-            Vyber šablonu
-            <select id="templateSelect"></select>
-          </label>
         </section>
+      </aside>
 
-        <div id="templateList" class="template-list"></div>
-      </div>
+      <section class="panel workspace">
+        <h2>Rychlé vytvoření e-mailu</h2>
+        <p class="muted">Vyber jazyk, napiš zadání a jedním klikem vygeneruj výsledek.</p>
+
+        <section class="grid">
+          <label for="language">
+            Language
+            <select id="language">
+              <option value="en">EN</option>
+              <option value="cz">CZ</option>
+            </select>
+          </label>
+
+          <label for="idea">
+            Co chceš napsat
+            <textarea id="idea" placeholder="E.g.: Thank the client for interest and suggest a short call next week."></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
+          </div>
+
+          <label for="result">Výsledek
+            <textarea id="result" readonly placeholder="Generated email appears here"></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="secondary" id="copyBtn" type="button">Copy</button>
+          </div>
+        </section>
+      </section>
+
     </section>
 
     <a class="back" href="../index.html">Zpět na dashboard</a>
@@ -275,7 +274,7 @@
     const templateBodyInput = document.getElementById("templateBody");
     const saveTemplateBtn = document.getElementById("saveTemplateBtn");
     const templateSelect = document.getElementById("templateSelect");
-    const templateList = document.getElementById("templateList");
+    const deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
 
     let templates = [];
 
@@ -339,57 +338,8 @@
       }
     }
 
-    function removeTemplate(id) {
-      templates = templates.filter(function (tpl) {
-        return tpl.id !== id;
-      });
-      saveTemplates();
-      renderTemplates();
-    }
-
     function renderTemplates() {
       renderTemplateSelect();
-      templateList.innerHTML = "";
-
-      templates.forEach(function (tpl) {
-        const item = document.createElement("div");
-        item.className = "template-item";
-
-        const title = document.createElement("p");
-        title.className = "template-title";
-        title.textContent = tpl.subject || `${tpl.product} - ${tpl.purpose}`;
-
-        const meta = document.createElement("p");
-        meta.className = "template-meta";
-        meta.textContent = `${tpl.product} | ${tpl.purpose}`;
-
-        const actions = document.createElement("div");
-        actions.className = "actions";
-
-        const useBtn = document.createElement("button");
-        useBtn.className = "ghost";
-        useBtn.type = "button";
-        useBtn.textContent = "Použít";
-        useBtn.addEventListener("click", function () {
-          templateSelect.value = tpl.id;
-          applySelectedTemplate();
-        });
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "secondary";
-        deleteBtn.type = "button";
-        deleteBtn.textContent = "Smazat";
-        deleteBtn.addEventListener("click", function () {
-          removeTemplate(tpl.id);
-        });
-
-        actions.appendChild(useBtn);
-        actions.appendChild(deleteBtn);
-        item.appendChild(title);
-        item.appendChild(meta);
-        item.appendChild(actions);
-        templateList.appendChild(item);
-      });
     }
 
     function applySelectedTemplate() {
@@ -467,6 +417,16 @@
 
     useTemplateBtn.addEventListener("click", function () {
       applySelectedTemplate();
+    });
+
+    deleteSelectedBtn.addEventListener("click", function () {
+      const selectedId = templateSelect.value;
+      if (!selectedId) return;
+      templates = templates.filter(function (tpl) {
+        return tpl.id !== selectedId;
+      });
+      saveTemplates();
+      renderTemplates();
     });
 
     generateBtn.addEventListener("click", function () {
