@@ -179,6 +179,15 @@
       color: #111827;
     }
 
+    .tiny-link-btn {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+
     .back {
       display: inline-block;
       margin-top: 12px;
@@ -282,33 +291,21 @@
         <p class="muted">Vyber jazyk, napiš zadání a jedním klikem vygeneruj výsledek.</p>
 
         <section class="grid scroll-area">
+          <label for="templateSelect">
+            Vyber šablonu
+            <select id="templateSelect" class="template-select"></select>
+          </label>
+
+          <div class="actions">
+            <button class="tiny-link-btn" id="openGeminiBtn" type="button">Ověřit aktuálnost (Gemini)</button>
+          </div>
+
           <label for="language">
             Language
             <select id="language">
               <option value="en">EN</option>
               <option value="cz">CZ</option>
             </select>
-          </label>
-
-          <label for="auditUrl">
-            URL webu
-            <input id="auditUrl" placeholder="https://example.com" />
-          </label>
-
-          <label for="auditInput">
-            Výstup z web scan asistenta
-            <textarea id="auditInput" placeholder="Sem vlož výstup z asistenta, který skenoval web..."></textarea>
-          </label>
-
-          <div class="actions">
-            <button class="secondary" id="openGeminiBtn" type="button">Otevřít web scan asistenta</button>
-            <button class="secondary" id="importClipboardBtn" type="button">Import z clipboardu</button>
-            <button class="ghost" id="generateFromAuditBtn" type="button">Vytvořit email z web auditu</button>
-          </div>
-
-          <label for="templateSelect">
-            Vyber šablonu
-            <select id="templateSelect" class="template-select"></select>
           </label>
 
           <label for="idea">
@@ -336,12 +333,8 @@
 
     const languageInput = document.getElementById("language");
     const ideaInput = document.getElementById("idea");
-    const auditUrlInput = document.getElementById("auditUrl");
-    const auditInput = document.getElementById("auditInput");
     const openGeminiBtn = document.getElementById("openGeminiBtn");
-    const importClipboardBtn = document.getElementById("importClipboardBtn");
     const generateBtn = document.getElementById("generateBtn");
-    const generateFromAuditBtn = document.getElementById("generateFromAuditBtn");
     const copyBtn = document.getElementById("copyBtn");
     const openInEmailBtn = document.getElementById("openInEmailBtn");
     const templateProductInput = document.getElementById("templateProduct");
@@ -560,119 +553,6 @@
       return { subject: subject, body: body };
     }
 
-    function summarizeAuditText(rawText, maxPoints) {
-      const normalized = rawText
-        .split("\n")
-        .map(function (line) { return line.trim(); })
-        .filter(function (line) { return line.length > 0; })
-        .map(function (line) { return line.replace(/^[-*•\d.)\s]+/, ""); });
-
-      const unique = [];
-      normalized.forEach(function (line) {
-        if (!unique.includes(line)) {
-          unique.push(line);
-        }
-      });
-
-      return unique.slice(0, maxPoints);
-    }
-
-    function buildEmailFromAudit() {
-      const language = languageInput.value;
-      const url = auditUrlInput.value.trim();
-      const rawAudit = auditInput.value.trim();
-
-      if (!rawAudit) {
-        return language === "cz"
-          ? "Dobrý den,\n\nmám pro vás připravené krátké doporučení k webu.\n\nS pozdravem,\nDaniela"
-          : "Hello,\n\nI have a short set of recommendations for your website.\n\nBest regards,\nDaniela";
-      }
-
-      // If the pasted content already looks like a full email draft from Gemini, keep it.
-      const hasEmailShape =
-        /(Subject:|Předmět:)/i.test(rawAudit) &&
-        /(Hello|Dobrý den|Hi)/i.test(rawAudit);
-      if (hasEmailShape) {
-        return rawAudit.trim();
-      }
-
-      const points = summarizeAuditText(rawAudit, 3);
-
-      if (language === "cz") {
-        const bodyLines = [];
-        bodyLines.push("Dobrý den,");
-        bodyLines.push("");
-        bodyLines.push("prošla jsem váš web a vytáhla jsem pár rychlých doporučení, která mohou pomoct výkonu i konverzi.");
-        if (url) {
-          bodyLines.push(`Web: ${url}`);
-        }
-        bodyLines.push("");
-        if (points.length > 0) {
-          bodyLines.push("Nejdůležitější body:");
-          points.forEach(function (point) {
-            bodyLines.push(`- ${toSentence(point)}`);
-          });
-          bodyLines.push("");
-        } else {
-          bodyLines.push("Mám připravené konkrétní návrhy zlepšení pro obsah, strukturu i CTA.");
-          bodyLines.push("");
-        }
-        bodyLines.push("Pokud chcete, pošlu krátký akční plán nebo navrhnu 20min call.");
-        bodyLines.push("");
-        bodyLines.push("S pozdravem,");
-        bodyLines.push("Daniela");
-
-        return [
-          "Předmět: Rychlá doporučení k vašemu webu",
-          "",
-          bodyLines.join("\n")
-        ].join("\n");
-      }
-
-      const bodyLines = [];
-      bodyLines.push("Hello,");
-      bodyLines.push("");
-      bodyLines.push("I reviewed your website and prepared a few quick suggestions that can improve clarity and conversion.");
-      if (url) {
-        bodyLines.push(`Website: ${url}`);
-      }
-      bodyLines.push("");
-      if (points.length > 0) {
-        bodyLines.push("Top findings:");
-        points.forEach(function (point) {
-          bodyLines.push(`- ${toSentence(point)}`);
-        });
-        bodyLines.push("");
-      } else {
-        bodyLines.push("I have a short set of practical recommendations for content, structure, and CTA improvements.");
-        bodyLines.push("");
-      }
-      bodyLines.push("If helpful, I can share a short action plan or propose a quick 20-minute call.");
-      bodyLines.push("");
-      bodyLines.push("Best regards,");
-      bodyLines.push("Daniela");
-
-      return [
-        "Subject: Quick website improvement ideas",
-        "",
-        bodyLines.join("\n")
-      ].join("\n");
-    }
-
-    async function importAuditFromClipboard() {
-      try {
-        const text = await navigator.clipboard.readText();
-        if (!text || !text.trim()) {
-          showToast("Clipboard je prázdný.");
-          return;
-        }
-        auditInput.value = text.trim();
-        ideaInput.value = buildEmailFromAudit();
-        showToast("Načteno z clipboardu a e-mail připraven.");
-      } catch (error) {
-        showToast("Clipboard nelze načíst. Zkus Ctrl+V do pole auditu.");
-      }
-    }
 
     function resetTemplateEditor() {
       templateProductInput.value = "";
@@ -778,18 +658,9 @@
       showToast("E-mail vygenerován.");
     });
 
-    generateFromAuditBtn.addEventListener("click", function () {
-      ideaInput.value = buildEmailFromAudit();
-      showToast("E-mail z web auditu vygenerován.");
-    });
-
     openGeminiBtn.addEventListener("click", function () {
       window.open(GEMINI_ASSISTANT_URL, "_blank", "noopener,noreferrer");
       showToast("Asistent otevřen v nové záložce.");
-    });
-
-    importClipboardBtn.addEventListener("click", function () {
-      importAuditFromClipboard();
     });
 
     copyBtn.addEventListener("click", async function () {
