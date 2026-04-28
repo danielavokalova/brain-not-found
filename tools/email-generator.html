@@ -330,6 +330,14 @@
       min-height: 34px;
     }
 
+    .compact-spacing p,
+    .compact-spacing li,
+    .compact-spacing ul,
+    .compact-spacing ol {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
     .footer {
       display: flex;
       align-items: center;
@@ -399,8 +407,10 @@
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦ Odsadit</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤ Předsadit</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-delta="-0.1">Řádky -</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-delta="0.1">Řádky +</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1">Řádky 1</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1.15">Řádky 1.15</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-lineheight-value="1.5">Řádky 1.5</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-compact-spacing="toggle">Odeber mezery</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertParagraph">↵ New line</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
@@ -506,6 +516,24 @@
       const next = Math.min(2.2, Math.max(1.1, current + delta));
       editorEl.style.lineHeight = next.toFixed(2);
       showToast("Řádkování upraveno.");
+    }
+
+    function setEditorLineHeight(editorEl, value) {
+      if (!editorEl) return;
+      const numeric = parseFloat(value);
+      if (!numeric || numeric <= 0) return;
+      editorEl.style.lineHeight = String(numeric);
+      showToast(`Řádkování ${numeric}.`);
+    }
+
+    function toggleCompactSpacing(editorEl) {
+      if (!editorEl) return;
+      editorEl.classList.toggle("compact-spacing");
+      if (editorEl.classList.contains("compact-spacing")) {
+        showToast("Odebrány mezery mezi odstavci.");
+      } else {
+        showToast("Obnoveny výchozí mezery.");
+      }
     }
 
     function escapeHtml(value) {
@@ -1000,9 +1028,21 @@
         const targetEditor = getEditorById(editorId);
         if (!targetEditor) return;
 
+        const lineValue = btn.getAttribute("data-lineheight-value");
+        if (lineValue) {
+          setEditorLineHeight(targetEditor, lineValue);
+          return;
+        }
+
         const lineDelta = btn.getAttribute("data-lineheight-delta");
         if (lineDelta) {
           adjustEditorLineHeight(targetEditor, parseFloat(lineDelta));
+          return;
+        }
+
+        const compactSpacing = btn.getAttribute("data-compact-spacing");
+        if (compactSpacing === "toggle") {
+          toggleCompactSpacing(targetEditor);
           return;
         }
 
