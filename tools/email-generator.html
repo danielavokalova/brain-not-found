@@ -193,6 +193,11 @@
       height: 20vh;
     }
 
+    .workspace textarea#auditInput {
+      min-height: 140px;
+      height: 18vh;
+    }
+
     .scroll-area {
       flex: 1;
       min-height: 0;
@@ -286,6 +291,16 @@
             </select>
           </label>
 
+          <label for="auditUrl">
+            URL webu
+            <input id="auditUrl" placeholder="https://example.com" />
+          </label>
+
+          <label for="auditInput">
+            Výstup z web scan asistenta
+            <textarea id="auditInput" placeholder="Sem vlož výstup z asistenta, který skenoval web..."></textarea>
+          </label>
+
           <label for="templateSelect">
             Vyber šablonu
             <select id="templateSelect" class="template-select"></select>
@@ -301,6 +316,7 @@
           </label>
         </section>
         <div class="actions panel-actions">
+          <button class="ghost" id="generateFromAuditBtn" type="button">Vytvořit email z web auditu</button>
           <button class="primary" id="generateBtn" type="button">Vytvořit email</button>
           <button class="secondary" id="copyBtn" type="button">Copy</button>
           <button class="ghost" id="openInEmailBtn" type="button">Otevřít v emailu</button>
@@ -321,7 +337,10 @@
     const languageInput = document.getElementById("language");
     const ideaInput = document.getElementById("idea");
     const resultOutput = document.getElementById("result");
+    const auditUrlInput = document.getElementById("auditUrl");
+    const auditInput = document.getElementById("auditInput");
     const generateBtn = document.getElementById("generateBtn");
+    const generateFromAuditBtn = document.getElementById("generateFromAuditBtn");
     const copyBtn = document.getElementById("copyBtn");
     const openInEmailBtn = document.getElementById("openInEmailBtn");
     const templateProductInput = document.getElementById("templateProduct");
@@ -540,6 +559,90 @@
       return { subject: subject, body: body };
     }
 
+    function summarizeAuditText(rawText, maxPoints) {
+      const normalized = rawText
+        .split("\n")
+        .map(function (line) { return line.trim(); })
+        .filter(function (line) { return line.length > 0; })
+        .map(function (line) { return line.replace(/^[-*•\d.)\s]+/, ""); });
+
+      const unique = [];
+      normalized.forEach(function (line) {
+        if (!unique.includes(line)) {
+          unique.push(line);
+        }
+      });
+
+      return unique.slice(0, maxPoints);
+    }
+
+    function buildEmailFromAudit() {
+      const language = languageInput.value;
+      const url = auditUrlInput.value.trim();
+      const rawAudit = auditInput.value.trim();
+      const points = summarizeAuditText(rawAudit, 3);
+
+      if (language === "cz") {
+        const bodyLines = [];
+        bodyLines.push("Dobrý den,");
+        bodyLines.push("");
+        bodyLines.push("prošla jsem váš web a vytáhla jsem pár rychlých doporučení, která mohou pomoct výkonu i konverzi.");
+        if (url) {
+          bodyLines.push(`Web: ${url}`);
+        }
+        bodyLines.push("");
+        if (points.length > 0) {
+          bodyLines.push("Nejdůležitější body:");
+          points.forEach(function (point) {
+            bodyLines.push(`- ${toSentence(point)}`);
+          });
+          bodyLines.push("");
+        } else {
+          bodyLines.push("Mám připravené konkrétní návrhy zlepšení pro obsah, strukturu i CTA.");
+          bodyLines.push("");
+        }
+        bodyLines.push("Pokud chcete, pošlu krátký akční plán nebo navrhnu 20min call.");
+        bodyLines.push("");
+        bodyLines.push("S pozdravem,");
+        bodyLines.push("Daniela");
+
+        return [
+          "Předmět: Rychlá doporučení k vašemu webu",
+          "",
+          bodyLines.join("\n")
+        ].join("\n");
+      }
+
+      const bodyLines = [];
+      bodyLines.push("Hello,");
+      bodyLines.push("");
+      bodyLines.push("I reviewed your website and prepared a few quick suggestions that can improve clarity and conversion.");
+      if (url) {
+        bodyLines.push(`Website: ${url}`);
+      }
+      bodyLines.push("");
+      if (points.length > 0) {
+        bodyLines.push("Top findings:");
+        points.forEach(function (point) {
+          bodyLines.push(`- ${toSentence(point)}`);
+        });
+        bodyLines.push("");
+      } else {
+        bodyLines.push("I have a short set of practical recommendations for content, structure, and CTA improvements.");
+        bodyLines.push("");
+      }
+      bodyLines.push("If helpful, I can share a short action plan or propose a quick 20-minute call.");
+      bodyLines.push("");
+      bodyLines.push("Best regards,");
+      bodyLines.push("Daniela");
+
+      return [
+        "Subject: Quick website improvement ideas",
+        "",
+        bodyLines.join("\n")
+      ].join("\n");
+    }
+
     function resetTemplateEditor() {
       templateProductInput.value = "";
       templatePurposeInput.value = "";
@@ -644,6 +747,11 @@
     generateBtn.addEventListener("click", function () {
       resultOutput.value = buildEmail();
       showToast("E-mail vygenerován.");
+    });
+
+    generateFromAuditBtn.addEventListener("click", function () {
+      resultOutput.value = buildEmailFromAudit();
+      showToast("E-mail z web auditu vygenerován.");
     });
 
     copyBtn.addEventListener("click", async function () {
