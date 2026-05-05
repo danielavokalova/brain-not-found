@@ -1,0 +1,9 @@
+{
+  "id": "prompt-summarize-thread",
+  "type": "prompt",
+  "title": "Summarize email thread",
+  "tags": ["summary", "thread", "tldr", "overview", "digest"],
+  "content": "Summarize this email thread in bullet points.\nFocus on:\n- Key decisions made\n- Action items (with owners if mentioned)\n- Any unresolved questions\n\n[PASTE THREAD HERE]",
+  "variables": [],
+  "ai_prompt": "Summarize this email thread in bullet points. Focus on: key decisions made, action items with owners if mentioned, and any unresolved questions.\n\n[PASTE THREAD HERE]"
+}

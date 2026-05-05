@@ -1,0 +1,10 @@
+{
+  "id": "email-meeting-confirmation",
+  "type": "email",
+  "title": "Confirm a meeting",
+  "tags": ["meeting", "confirm", "calendar", "schedule", "call"],
+  "subject": "Confirmed: {{meeting_topic}} on {{date}}",
+  "content": "Hi {{name}},\n\njust confirming our meeting on {{date}} at {{time}}.\n\nWe will cover: {{meeting_topic}}.\n\nIf anything changes, please let me know in advance.\n\nSee you then,\n{{sender_name}}",
+  "variables": ["name", "date", "time", "meeting_topic", "sender_name"],
+  "ai_prompt": "Write a short meeting confirmation email to {{name}} for a meeting on {{date}} at {{time}} about {{meeting_topic}}. Keep it professional and under 60 words."
+}

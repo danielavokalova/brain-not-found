@@ -1,0 +1,9 @@
+{
+  "id": "prompt-rewrite-professional",
+  "type": "prompt",
+  "title": "Rewrite email — professional tone",
+  "tags": ["rewrite", "edit", "tone", "professional", "polish"],
+  "content": "Rewrite the following email in a professional but friendly tone.\nKeep it concise, clear, and direct.\nRemove filler words and redundancy.\nPreserve the original intent.\n\n[PASTE EMAIL HERE]",
+  "variables": [],
+  "ai_prompt": "Rewrite the following email in a professional but friendly tone. Keep it concise, clear, and direct. Remove filler words and redundancy. Preserve the original intent.\n\n[PASTE EMAIL HERE]"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "prompt-improve-subject-line",
+  "type": "prompt",
+  "title": "Improve email subject line",
+  "tags": ["subject", "subject line", "open rate", "headline", "optimize"],
+  "content": "Generate 5 alternative subject lines for the email below.\nMake them specific, curiosity-driven, and under 50 characters.\nAvoid clickbait.\n\n[PASTE EMAIL HERE]",
+  "variables": [],
+  "ai_prompt": "Generate 5 alternative subject lines for the email below. Make them specific, curiosity-driven, and under 50 characters. Avoid clickbait. Rank them by likely open rate.\n\n[PASTE EMAIL HERE]"
+}

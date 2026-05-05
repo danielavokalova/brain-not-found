@@ -1,0 +1,10 @@
+{
+  "id": "email-reply-to-interest",
+  "type": "email",
+  "title": "Reply to client interest",
+  "tags": ["client", "reply", "interest", "inquiry", "inbound"],
+  "subject": "Thanks for your interest in {{service_name}}",
+  "content": "Hi {{name}},\n\nthanks for reaching out and for your interest in {{service_name}}.\nI would be happy to help.\n\nCould you please share:\n- what exactly you need,\n- your ideal timeline,\n- and your budget (if available)?\n\nThen I can suggest the next best step.\n\nThanks,\n{{sender_name}}",
+  "variables": ["name", "service_name", "sender_name"],
+  "ai_prompt": "Write a professional and friendly reply to a client who expressed interest in {{service_name}}. Address them as {{name}}. Ask for their requirements, timeline, and budget. Keep it warm, concise, and under 100 words."
+}
