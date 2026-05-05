@@ -1,0 +1,9 @@
+{
+  "id": "prompt-extract-action-items",
+  "type": "prompt",
+  "title": "Extract action items from text",
+  "tags": ["action items", "tasks", "extract", "meeting notes", "todo"],
+  "content": "Extract all action items from the text below.\nFor each item include:\n- What needs to be done\n- Who is responsible (if mentioned)\n- Deadline (if mentioned)\n\n[PASTE TEXT HERE]",
+  "variables": [],
+  "ai_prompt": "Extract all action items from the text below. For each item state: what needs to be done, who is responsible (if mentioned), and the deadline (if mentioned). Format as a numbered list.\n\n[PASTE TEXT HERE]"
+}

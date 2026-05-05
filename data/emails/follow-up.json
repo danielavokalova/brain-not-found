@@ -1,0 +1,10 @@
+{
+  "id": "email-follow-up",
+  "type": "email",
+  "title": "Follow-up reminder",
+  "tags": ["follow-up", "reminder", "client", "chase", "no-reply"],
+  "subject": "Quick follow-up on {{topic}}",
+  "content": "Hi {{name}},\n\njust following up on my previous email about {{topic}}.\nIs this still relevant for you?\n\nIf yes, just reply and I will propose the next step.\n\nThanks,\n{{sender_name}}",
+  "variables": ["name", "topic", "sender_name"],
+  "ai_prompt": "Write a short, polite follow-up email to {{name}} about {{topic}}. Keep it brief — two sentences max. Friendly but professional. Do not sound pushy."
+}

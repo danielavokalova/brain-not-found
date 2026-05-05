@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brain Not Found</title>
   <style>
+    /* ── Design tokens (unchanged from original) ─────────────────────────── */
     :root {
       color-scheme: light;
       --bg: #f5f7fb;
@@ -15,9 +16,7 @@
       --border: #e5e7eb;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -25,14 +24,13 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: grid;
-      place-items: center;
       padding: 24px;
     }
 
     .container {
       width: 100%;
-      max-width: 820px;
+      max-width: 860px;
+      margin: 0 auto;
     }
 
     h1 {
@@ -41,6 +39,7 @@
       font-size: 2rem;
     }
 
+    /* ── Original dashboard grid (unchanged) ─────────────────────────────── */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -78,43 +77,401 @@
       font-weight: 600;
     }
 
-    .button-link:hover {
-      opacity: 0.92;
+    .button-link:hover { opacity: 0.92; }
+
+    /* ── Section divider ─────────────────────────────────────────────────── */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0 0 12px;
     }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── Search bar ──────────────────────────────────────────────────────── */
+    .s-search-wrap {
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .s-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    #s-input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px 12px 40px;
+      font: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      transition: border-color 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    #s-input:focus {
+      border-color: var(--accent);
+    }
+
+    #s-input::placeholder { color: var(--muted); }
+
+    .s-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-height: 20px;
+    }
+
+    /* ── Result cards grid ───────────────────────────────────────────────── */
+    .s-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .s-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .s-card:hover,
+    .s-card:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
+      outline: none;
+    }
+
+    .s-card-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .s-card-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .s-card-snippet {
+      margin: 0 0 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── Type badge ──────────────────────────────────────────────────────── */
+    .s-type {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 7px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .s-type--email  { background: #dbeafe; color: #1e40af; }
+    .s-type--prompt { background: #ede9fe; color: #5b21b6; }
+
+    /* ── Tags ────────────────────────────────────────────────────────────── */
+    .s-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .s-tag {
+      font-size: 0.72rem;
+      background: #f3f4f6;
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 2px 8px;
+    }
+
+    /* ── Empty state ─────────────────────────────────────────────────────── */
+    .s-empty {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 8px 0;
+      margin: 0;
+    }
+
+    /* ── Detail panel (full-screen overlay) ──────────────────────────────── */
+    #s-detail {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+    }
+
+    #s-detail[hidden] { display: none; }
+
+    .s-detail-inner {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 24px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .s-detail-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: #f3f4f6;
+      border: none;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--muted);
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .s-detail-close:hover { background: #e5e7eb; color: var(--text); }
+
+    .s-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .s-detail-title {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .s-detail-subject {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .s-detail-field-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .s-detail-vars {
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .s-detail-vars-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    .s-var {
+      background: #fef9c3;
+      color: #713f12;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.8rem;
+      font-family: monospace;
+    }
+
+    .s-detail-tags { margin-bottom: 14px; }
+
+    /* Template content block */
+    .s-content {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font: inherit;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0 0 16px;
+    }
+
+    /* ── Detail action buttons ───────────────────────────────────────────── */
+    .s-detail-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .s-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .s-btn--primary   { background: var(--accent); color: #fff; }
+    .s-btn--secondary { background: #e5e7eb; color: #111827; }
+    .s-btn--ai        { background: #5b21b6; color: #fff; }
+
+    .s-btn:hover { opacity: 0.88; }
+
+    .s-detail-hint {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Toast notification ──────────────────────────────────────────────── */
+    #search-toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #111827;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 2000;
+    }
+
+    #search-toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
   <main class="container">
     <h1>Brain Not Found</h1>
-    <section class="grid">
-      <article class="card">
-        <h2>Tools</h2>
-        <a class="button-link" href="tools/email-generator.html">Email Generator</a>
-        <p class="item" style="margin-top:10px;">Quick email drafting in one box.</p>
-      </article>
 
-      <article class="card">
-        <h2>Dashboard</h2>
-        <a class="button-link" href="https://danielavokalova.github.io/dashboard/" target="_blank" rel="noopener noreferrer">Open Dashboard</a>
-        <p class="item" style="margin-top:10px;">Fully functional central crossroad.</p>
-      </article>
+    <!-- ── SEARCH SECTION ─────────────────────────────────────────────── -->
+    <section aria-label="Template search">
+      <p class="section-title">Search templates</p>
 
-      <article class="card">
-        <h2>Systems</h2>
-        <p class="item">Email templates (placeholder text)</p>
-      </article>
+      <div class="s-search-wrap">
+        <span class="s-search-icon" aria-hidden="true">🔍</span>
+        <input
+          id="s-input"
+          type="search"
+          placeholder="Search by keyword or tag — e.g. &quot;follow up client&quot;"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search templates"
+        />
+      </div>
 
-      <article class="card">
-        <h2>Knowledge</h2>
-        <p class="item">Prompts (placeholder)</p>
-      </article>
+      <div class="s-meta-row">
+        <span id="s-count"></span>
+        <span>Click a card to view &amp; use</span>
+      </div>
 
-      <article class="card">
-        <h2>Inbox</h2>
-        <a class="button-link" href="inbox/index.html">Quick Notes</a>
-        <p class="item" style="margin-top:10px;">Fast capture for ideas and notes.</p>
-      </article>
+      <div id="s-results" aria-live="polite" aria-label="Search results">
+        <!-- Filled by ui.js -->
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- ── ORIGINAL DASHBOARD CARDS (unchanged) ───────────────────────── -->
+    <section aria-label="Dashboard links">
+      <p class="section-title">Dashboard</p>
+      <div class="grid">
+        <article class="card">
+          <h2>Tools</h2>
+          <a class="button-link" href="tools/email-generator.html">Email Generator</a>
+          <p class="item" style="margin-top:10px;">Quick email drafting in one box.</p>
+        </article>
+
+        <article class="card">
+          <h2>Dashboard</h2>
+          <a class="button-link" href="https://danielavokalova.github.io/dashboard/" target="_blank" rel="noopener noreferrer">Open Dashboard</a>
+          <p class="item" style="margin-top:10px;">Fully functional central crossroad.</p>
+        </article>
+
+        <article class="card">
+          <h2>Systems</h2>
+          <p class="item">Email templates (placeholder text)</p>
+        </article>
+
+        <article class="card">
+          <h2>Knowledge</h2>
+          <p class="item">Prompts (placeholder)</p>
+        </article>
+
+        <article class="card">
+          <h2>Inbox</h2>
+          <a class="button-link" href="inbox/index.html">Quick Notes</a>
+          <p class="item" style="margin-top:10px;">Fast capture for ideas and notes.</p>
+        </article>
+      </div>
     </section>
   </main>
+
+  <!-- ── DETAIL PANEL OVERLAY ─────────────────────────────────────────── -->
+  <div id="s-detail" hidden aria-modal="true"></div>
+
+  <!-- ── TOAST ─────────────────────────────────────────────────────────── -->
+  <div id="search-toast" role="status" aria-live="polite"></div>
+
+  <!-- Scripts: search logic first, then UI (which auto-wires on DOMContentLoaded) -->
+  <script src="app/search.js"></script>
+  <script src="app/ui.js"></script>
 </body>
 </html>

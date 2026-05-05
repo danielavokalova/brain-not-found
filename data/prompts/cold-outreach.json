@@ -1,0 +1,9 @@
+{
+  "id": "prompt-cold-outreach",
+  "type": "prompt",
+  "title": "Write cold outreach email",
+  "tags": ["cold", "outreach", "sales", "pitch", "new client", "prospecting"],
+  "content": "Write a cold outreach email to {{name}} at {{company}}.\nThe purpose is: {{goal}}.\n\nRules:\n- Under 5 sentences\n- No buzzwords\n- Value must be clear in the first line\n- End with a specific, low-commitment CTA",
+  "variables": ["name", "company", "goal"],
+  "ai_prompt": "Write a cold outreach email to {{name}} at {{company}}. The purpose is: {{goal}}. Rules: under 5 sentences, no buzzwords, make the value clear in the first line, end with a specific low-commitment call to action."
+}

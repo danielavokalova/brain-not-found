@@ -1,0 +1,10 @@
+{
+  "id": "email-proposal-send",
+  "type": "email",
+  "title": "Send proposal / offer",
+  "tags": ["proposal", "offer", "pitch", "quote", "sales"],
+  "subject": "Proposal for {{project_name}}",
+  "content": "Hi {{name}},\n\nthank you for the conversation — it was great to learn more about what you need.\n\nI have prepared a proposal for {{project_name}}. You can find it attached / at the link below.\n\nHappy to walk you through it on a quick call if that helps.\n\nLooking forward to hearing from you,\n{{sender_name}}",
+  "variables": ["name", "project_name", "sender_name"],
+  "ai_prompt": "Write a professional email to {{name}} sending a proposal for {{project_name}}. Mention the proposal is attached. Offer a quick call to walk through it. Keep it friendly and under 80 words."
+}

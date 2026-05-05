@@ -1,0 +1,10 @@
+{
+  "id": "email-polite-rejection",
+  "type": "email",
+  "title": "Polite rejection",
+  "tags": ["rejection", "decline", "no", "unavailable", "boundary"],
+  "subject": "Thank you for reaching out",
+  "content": "Hi {{name}},\n\nthank you for your message about {{topic}}.\nUnfortunately, I cannot take this on right now.\n\nI do not want to commit to something I cannot deliver well and on time.\nIf helpful, I can recommend an alternative.\n\nThanks for understanding,\n{{sender_name}}",
+  "variables": ["name", "topic", "sender_name"],
+  "ai_prompt": "Write a polite rejection email to {{name}} about {{topic}}. Be warm and empathetic. Explain you cannot commit right now without over-explaining. Offer to recommend someone else. Keep it under 80 words."
+}

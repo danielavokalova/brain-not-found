@@ -1,0 +1,99 @@
+{
+  "templates": [
+    {
+      "id": "email-reply-to-interest",
+      "type": "email",
+      "title": "Reply to client interest",
+      "tags": ["client", "reply", "interest", "inquiry", "inbound"],
+      "subject": "Thanks for your interest in {{service_name}}",
+      "content": "Hi {{name}},\n\nthanks for reaching out and for your interest in {{service_name}}.\nI would be happy to help.\n\nCould you please share:\n- what exactly you need,\n- your ideal timeline,\n- and your budget (if available)?\n\nThen I can suggest the next best step.\n\nThanks,\n{{sender_name}}",
+      "variables": ["name", "service_name", "sender_name"],
+      "ai_prompt": "Write a professional and friendly reply to a client who expressed interest in {{service_name}}. Address them as {{name}}. Ask for their requirements, timeline, and budget. Keep it warm, concise, and under 100 words."
+    },
+    {
+      "id": "email-follow-up",
+      "type": "email",
+      "title": "Follow-up reminder",
+      "tags": ["follow-up", "reminder", "client", "chase", "no-reply"],
+      "subject": "Quick follow-up on {{topic}}",
+      "content": "Hi {{name}},\n\njust following up on my previous email about {{topic}}.\nIs this still relevant for you?\n\nIf yes, just reply and I will propose the next step.\n\nThanks,\n{{sender_name}}",
+      "variables": ["name", "topic", "sender_name"],
+      "ai_prompt": "Write a short, polite follow-up email to {{name}} about {{topic}}. Keep it brief — two sentences max. Friendly but professional. Do not sound pushy."
+    },
+    {
+      "id": "email-polite-rejection",
+      "type": "email",
+      "title": "Polite rejection",
+      "tags": ["rejection", "decline", "no", "unavailable", "boundary"],
+      "subject": "Thank you for reaching out",
+      "content": "Hi {{name}},\n\nthank you for your message about {{topic}}.\nUnfortunately, I cannot take this on right now.\n\nI do not want to commit to something I cannot deliver well and on time.\nIf helpful, I can recommend an alternative.\n\nThanks for understanding,\n{{sender_name}}",
+      "variables": ["name", "topic", "sender_name"],
+      "ai_prompt": "Write a polite rejection email to {{name}} about {{topic}}. Be warm and empathetic. Explain you cannot commit right now without over-explaining. Offer to recommend someone else. Keep it under 80 words."
+    },
+    {
+      "id": "email-proposal-send",
+      "type": "email",
+      "title": "Send proposal / offer",
+      "tags": ["proposal", "offer", "pitch", "quote", "sales"],
+      "subject": "Proposal for {{project_name}}",
+      "content": "Hi {{name}},\n\nthank you for the conversation — it was great to learn more about what you need.\n\nI have prepared a proposal for {{project_name}}. You can find it attached / at the link below.\n\nHappy to walk you through it on a quick call if that helps.\n\nLooking forward to hearing from you,\n{{sender_name}}",
+      "variables": ["name", "project_name", "sender_name"],
+      "ai_prompt": "Write a professional email to {{name}} sending a proposal for {{project_name}}. Mention the proposal is attached. Offer a quick call to walk through it. Keep it friendly and under 80 words."
+    },
+    {
+      "id": "email-meeting-confirmation",
+      "type": "email",
+      "title": "Confirm a meeting",
+      "tags": ["meeting", "confirm", "calendar", "schedule", "call"],
+      "subject": "Confirmed: {{meeting_topic}} on {{date}}",
+      "content": "Hi {{name}},\n\njust confirming our meeting on {{date}} at {{time}}.\n\nWe will cover: {{meeting_topic}}.\n\nIf anything changes, please let me know in advance.\n\nSee you then,\n{{sender_name}}",
+      "variables": ["name", "date", "time", "meeting_topic", "sender_name"],
+      "ai_prompt": "Write a short meeting confirmation email to {{name}} for a meeting on {{date}} at {{time}} about {{meeting_topic}}. Keep it professional and under 60 words."
+    },
+    {
+      "id": "prompt-rewrite-professional",
+      "type": "prompt",
+      "title": "Rewrite email — professional tone",
+      "tags": ["rewrite", "edit", "tone", "professional", "polish"],
+      "content": "Rewrite the following email in a professional but friendly tone.\nKeep it concise, clear, and direct.\nRemove filler words and redundancy.\nPreserve the original intent.\n\n[PASTE EMAIL HERE]",
+      "variables": [],
+      "ai_prompt": "Rewrite the following email in a professional but friendly tone. Keep it concise, clear, and direct. Remove filler words and redundancy. Preserve the original intent.\n\n[PASTE EMAIL HERE]"
+    },
+    {
+      "id": "prompt-summarize-thread",
+      "type": "prompt",
+      "title": "Summarize email thread",
+      "tags": ["summary", "thread", "tldr", "overview", "digest"],
+      "content": "Summarize this email thread in bullet points.\nFocus on:\n- Key decisions made\n- Action items (with owners if mentioned)\n- Any unresolved questions\n\n[PASTE THREAD HERE]",
+      "variables": [],
+      "ai_prompt": "Summarize this email thread in bullet points. Focus on: key decisions made, action items with owners if mentioned, and any unresolved questions.\n\n[PASTE THREAD HERE]"
+    },
+    {
+      "id": "prompt-cold-outreach",
+      "type": "prompt",
+      "title": "Write cold outreach email",
+      "tags": ["cold", "outreach", "sales", "pitch", "new client", "prospecting"],
+      "content": "Write a cold outreach email to {{name}} at {{company}}.\nThe purpose is: {{goal}}.\n\nRules:\n- Under 5 sentences\n- No buzzwords\n- Value must be clear in the first line\n- End with a specific, low-commitment CTA",
+      "variables": ["name", "company", "goal"],
+      "ai_prompt": "Write a cold outreach email to {{name}} at {{company}}. The purpose is: {{goal}}. Rules: under 5 sentences, no buzzwords, make the value clear in the first line, end with a specific low-commitment call to action."
+    },
+    {
+      "id": "prompt-improve-subject-line",
+      "type": "prompt",
+      "title": "Improve email subject line",
+      "tags": ["subject", "subject line", "open rate", "headline", "optimize"],
+      "content": "Generate 5 alternative subject lines for the email below.\nMake them specific, curiosity-driven, and under 50 characters.\nAvoid clickbait.\n\n[PASTE EMAIL HERE]",
+      "variables": [],
+      "ai_prompt": "Generate 5 alternative subject lines for the email below. Make them specific, curiosity-driven, and under 50 characters. Avoid clickbait. Rank them by likely open rate.\n\n[PASTE EMAIL HERE]"
+    },
+    {
+      "id": "prompt-extract-action-items",
+      "type": "prompt",
+      "title": "Extract action items from text",
+      "tags": ["action items", "tasks", "extract", "meeting notes", "todo"],
+      "content": "Extract all action items from the text below.\nFor each item include:\n- What needs to be done\n- Who is responsible (if mentioned)\n- Deadline (if mentioned)\n\n[PASTE TEXT HERE]",
+      "variables": [],
+      "ai_prompt": "Extract all action items from the text below. For each item state: what needs to be done, who is responsible (if mentioned), and the deadline (if mentioned). Format as a numbered list.\n\n[PASTE TEXT HERE]"
+    }
+  ]
+}
