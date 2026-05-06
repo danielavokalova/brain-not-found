@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Reply — Brain Not Found</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --purple: #5b21b6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 { margin: 0 0 4px; font-size: 1.8rem; }
+
+    .sub {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── API key banner ───────────────────────────────────────────────── */
+    #key-banner {
+      background: #fef9c3;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    #key-banner.hidden { display: none; }
+
+    #key-banner label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    #key-input {
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.9rem;
+    }
+
+    #key-save-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .key-hint {
+      width: 100%;
+      font-size: 0.8rem;
+      color: #92400e;
+      margin: 0;
+    }
+
+    /* ── Key status bar ───────────────────────────────────────────────── */
+    #key-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    #key-status.hidden { display: none; }
+
+    .key-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+    }
+
+    #key-change-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Panels ───────────────────────────────────────────────────────── */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #fff;
+      resize: vertical;
+    }
+
+    textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    #incoming-email {
+      min-height: 220px;
+      line-height: 1.5;
+    }
+
+    #reply-output {
+      min-height: 220px;
+      line-height: 1.5;
+      background: #f9fafb;
+    }
+
+    #reply-output.has-content {
+      background: #fff;
+    }
+
+    /* ── Tone selector ────────────────────────────────────────────────── */
+    .tone-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tone-btn {
+      border: 1.5px solid var(--border);
+      background: #f9fafb;
+      color: var(--text);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.12s, background 0.12s;
+    }
+
+    .tone-btn.active {
+      border-color: var(--accent);
+      background: #eff6ff;
+      color: var(--accent);
+    }
+
+    /* ── Action buttons ───────────────────────────────────────────────── */
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .btn-primary  { background: var(--purple); color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-accent   { background: var(--accent); color: #fff; }
+    .btn:hover    { opacity: 0.88; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Spinner inside button ────────────────────────────────────────── */
+    .btn-primary .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Character / word hint under output ───────────────────────────── */
+    .output-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      min-height: 16px;
+    }
+
+    /* ── Toast ────────────────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      background: #111827;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 9999;
+    }
+
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Back link ────────────────────────────────────────────────────── */
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Smart Reply</h1>
+    <p class="sub">Paste any email you received → get a ready-to-send reply in your tone.</p>
+
+    <!-- API key setup -->
+    <div id="key-banner">
+      <label for="key-input">Anthropic API key</label>
+      <input id="key-input" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" />
+      <button id="key-save-btn" type="button">Save key</button>
+      <p class="key-hint">
+        Your key is stored only in your browser (localStorage). It never leaves your device except to call the Anthropic API directly.
+        Get a key at <strong>console.anthropic.com</strong>.
+      </p>
+    </div>
+
+    <div id="key-status" class="hidden">
+      <span class="key-dot"></span>
+      <span>API key saved</span>
+      <button id="key-change-btn" type="button">change</button>
+    </div>
+
+    <!-- Main layout -->
+    <div class="layout">
+
+      <!-- LEFT: input -->
+      <div class="panel">
+        <h2 class="panel-title">Incoming email</h2>
+        <p class="panel-hint">Paste the full email you received — subject, body, anything you have.</p>
+
+        <label for="incoming-email">
+          Email you received
+          <textarea id="incoming-email" placeholder="Hi, I saw your services and I'm interested…"></textarea>
+        </label>
+
+        <label for="reply-goal">
+          What do you want to achieve with your reply?
+          <select id="reply-goal">
+            <option value="auto">Auto-detect (recommended)</option>
+            <option value="reply-interest">Reply to client interest</option>
+            <option value="follow-up">Follow-up / chase</option>
+            <option value="rejection">Polite rejection</option>
+            <option value="confirm-meeting">Confirm a meeting</option>
+            <option value="send-proposal">Send proposal</option>
+            <option value="custom">Just reply professionally</option>
+          </select>
+        </label>
+
+        <div>
+          <p style="margin:0 0 6px;font-size:0.88rem;font-weight:700;">Tone</p>
+          <div class="tone-row">
+            <button class="tone-btn active" data-tone="friendly-professional" type="button">Friendly professional</button>
+            <button class="tone-btn" data-tone="formal" type="button">Formal</button>
+            <button class="tone-btn" data-tone="brief" type="button">Very brief</button>
+            <button class="tone-btn" data-tone="warm" type="button">Warm</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="draft-btn" type="button">✦ Draft reply</button>
+          <button class="btn btn-secondary" id="clear-btn" type="button">Clear</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: output -->
+      <div class="panel">
+        <h2 class="panel-title">Your reply</h2>
+        <p class="panel-hint">Editable — review, adjust if needed, then copy and send.</p>
+
+        <textarea id="reply-output" placeholder="Your drafted reply will appear here…" spellcheck="true"></textarea>
+
+        <p class="output-meta" id="output-meta"></p>
+
+        <div class="actions">
+          <button class="btn btn-accent" id="copy-btn" type="button">Copy</button>
+          <button class="btn btn-secondary" id="mailto-btn" type="button">Open in email client</button>
+        </div>
+      </div>
+
+    </div>
+
+    <a class="back" href="../index.html">← Back to dashboard</a>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../app/search.js"></script>
+  <script>
+    const STORAGE_KEY_API  = 'brain-anthropic-key';
+    const MODEL            = 'claude-opus-4-7';
+
+    // ── Elements ─────────────────────────────────────────────────────────────
+    const keyBanner    = document.getElementById('key-banner');
+    const keyStatus    = document.getElementById('key-status');
+    const keyInput     = document.getElementById('key-input');
+    const keySaveBtn   = document.getElementById('key-save-btn');
+    const keyChangeBtn = document.getElementById('key-change-btn');
+    const incomingEl   = document.getElementById('incoming-email');
+    const replyGoalEl  = document.getElementById('reply-goal');
+    const replyOutput  = document.getElementById('reply-output');
+    const outputMeta   = document.getElementById('output-meta');
+    const draftBtn     = document.getElementById('draft-btn');
+    const clearBtn     = document.getElementById('clear-btn');
+    const copyBtn      = document.getElementById('copy-btn');
+    const mailtoBtn    = document.getElementById('mailto-btn');
+    const toast        = document.getElementById('toast');
+    const toneBtns     = document.querySelectorAll('.tone-btn');
+
+    let selectedTone = 'friendly-professional';
+    let toastTimer   = null;
+    let templates    = [];
+
+    // ── Toast ─────────────────────────────────────────────────────────────────
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2200);
+    }
+
+    // ── API key management ────────────────────────────────────────────────────
+    function getKey() { return localStorage.getItem(STORAGE_KEY_API) || ''; }
+
+    function renderKeyUI() {
+      const key = getKey();
+      if (key) {
+        keyBanner.classList.add('hidden');
+        keyStatus.classList.remove('hidden');
+      } else {
+        keyBanner.classList.remove('hidden');
+        keyStatus.classList.add('hidden');
+      }
+    }
+
+    keySaveBtn.addEventListener('click', function () {
+      const val = keyInput.value.trim();
+      if (!val.startsWith('sk-ant-')) {
+        showToast('That doesn\'t look like an Anthropic key (should start with sk-ant-)');
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY_API, val);
+      keyInput.value = '';
+      renderKeyUI();
+      showToast('API key saved!');
+    });
+
+    keyChangeBtn.addEventListener('click', function () {
+      localStorage.removeItem(STORAGE_KEY_API);
+      renderKeyUI();
+    });
+
+    // ── Tone selector ─────────────────────────────────────────────────────────
+    toneBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        toneBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        selectedTone = btn.dataset.tone;
+      });
+    });
+
+    // ── Word count ────────────────────────────────────────────────────────────
+    function updateMeta() {
+      const text = replyOutput.value.trim();
+      if (!text) { outputMeta.textContent = ''; return; }
+      const words = text.split(/\s+/).filter(Boolean).length;
+      outputMeta.textContent = `${words} words`;
+    }
+
+    replyOutput.addEventListener('input', updateMeta);
+
+    // ── Build system prompt ───────────────────────────────────────────────────
+    function buildSystemPrompt(templatesContext) {
+      const toneMap = {
+        'friendly-professional': 'friendly but professional — warm, direct, no fluff',
+        'formal':  'formal and polished — respectful, no contractions',
+        'brief':   'very brief — maximum 3 sentences, get straight to the point',
+        'warm':    'warm and personal — empathetic, encouraging'
+      };
+
+      return `You are an email assistant for Daniela, a professional consultant.
+
+Your job: read an incoming email and write a ready-to-send reply FROM Daniela.
+
+Daniela's communication style:
+- ${toneMap[selectedTone] || toneMap['friendly-professional']}
+- Concise — no filler phrases like "I hope this email finds you well"
+- Ends with a clear next step or question
+- Signs off as "Daniela"
+
+Available reply templates (use as style guides, not copy-paste):
+${templatesContext}
+
+Rules:
+- Output ONLY the email body (no subject line, no "Subject:" prefix)
+- Fill in any context you can infer from the incoming email
+- Do not invent facts — if something is unclear, ask one short question
+- Do not use buzzwords or corporate language
+- Match the length to the situation — short email in, short reply out`;
+    }
+
+    // ── Build user message ────────────────────────────────────────────────────
+    function buildUserMessage(incomingEmail, goal) {
+      const goalMap = {
+        'auto':          'Auto-detect the best type of reply based on the email.',
+        'reply-interest': 'Reply to client interest — thank them, ask for requirements.',
+        'follow-up':     'Write a polite follow-up / chase.',
+        'rejection':     'Write a polite rejection.',
+        'confirm-meeting': 'Confirm the meeting details.',
+        'send-proposal': 'Write an email to send a proposal.',
+        'custom':        'Write a professional reply.'
+      };
+
+      return `Incoming email:
+---
+${incomingEmail}
+---
+
+Goal: ${goalMap[goal] || goalMap['auto']}
+
+Write Daniela's reply.`;
+    }
+
+    // ── Call Claude API ───────────────────────────────────────────────────────
+    async function callClaude(systemPrompt, userMessage) {
+      const key = getKey();
+      if (!key) throw new Error('NO_KEY');
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type':         'application/json',
+          'x-api-key':            key,
+          'anthropic-version':    '2023-06-01',
+          'anthropic-dangerous-allow-browser': 'true'
+        },
+        body: JSON.stringify({
+          model:      MODEL,
+          max_tokens: 1024,
+          system:     systemPrompt,
+          messages: [
+            { role: 'user', content: userMessage }
+          ]
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(function () { return {}; });
+        throw new Error(err.error?.message || `API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      return (data.content?.[0]?.text || '').trim();
+    }
+
+    // ── Draft reply ───────────────────────────────────────────────────────────
+    draftBtn.addEventListener('click', async function () {
+      const incoming = incomingEl.value.trim();
+      if (!incoming) {
+        showToast('Paste the email you received first.');
+        return;
+      }
+      if (!getKey()) {
+        showToast('Enter your Anthropic API key first.');
+        keyBanner.classList.remove('hidden');
+        keyStatus.classList.add('hidden');
+        return;
+      }
+
+      // Build template context from loaded templates
+      const emailTemplates = templates.filter(function (t) { return t.type === 'email'; });
+      const templatesContext = emailTemplates.map(function (t) {
+        return `[${t.title}]\n${t.content}`;
+      }).join('\n\n---\n\n');
+
+      // Loading state
+      draftBtn.disabled = true;
+      draftBtn.innerHTML = '<span class="spinner"></span>Drafting…';
+      replyOutput.value = '';
+      replyOutput.classList.remove('has-content');
+      outputMeta.textContent = '';
+
+      try {
+        const system  = buildSystemPrompt(templatesContext);
+        const message = buildUserMessage(incoming, replyGoalEl.value);
+        const reply   = await callClaude(system, message);
+
+        replyOutput.value = reply;
+        replyOutput.classList.add('has-content');
+        updateMeta();
+        showToast('Reply drafted!');
+      } catch (err) {
+        if (err.message === 'NO_KEY') {
+          showToast('API key missing — enter it above.');
+        } else {
+          showToast('Error: ' + err.message);
+          console.error('[SmartReply]', err);
+        }
+      } finally {
+        draftBtn.disabled = false;
+        draftBtn.innerHTML = '✦ Draft reply';
+      }
+    });
+
+    // ── Clear ─────────────────────────────────────────────────────────────────
+    clearBtn.addEventListener('click', function () {
+      incomingEl.value  = '';
+      replyOutput.value = '';
+      replyOutput.classList.remove('has-content');
+      outputMeta.textContent = '';
+    });
+
+    // ── Copy ──────────────────────────────────────────────────────────────────
+    copyBtn.addEventListener('click', async function () {
+      const text = replyOutput.value.trim();
+      if (!text) { showToast('Nothing to copy yet.'); return; }
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = 'Copied!';
+        showToast('Reply copied to clipboard!');
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500);
+      } catch {
+        showToast('Copy failed — select text manually.');
+      }
+    });
+
+    // ── Open in email client ──────────────────────────────────────────────────
+    mailtoBtn.addEventListener('click', function () {
+      const text = replyOutput.value.trim();
+      if (!text) { showToast('Draft a reply first.'); return; }
+      window.location.href = 'mailto:?body=' + encodeURIComponent(text);
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    renderKeyUI();
+
+    // Load templates for context (best-effort — works on GitHub Pages)
+    Search.init().then(function (loaded) {
+      templates = loaded;
+    }).catch(function () {
+      templates = [];
+    });
+  </script>
+</body>
+</html>
