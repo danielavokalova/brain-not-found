@@ -144,14 +144,25 @@
       padding: 12px;
       overflow: auto;
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.1;
       outline: none;
-      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .rich-editor:empty::before {
       content: attr(data-placeholder);
       color: #9ca3af;
+    }
+
+    .rich-editor p, .rich-editor div,
+    .rich-editor ul, .rich-editor ol, .rich-editor li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .rich-editor ul, .rich-editor ol {
+      padding-left: 20px;
     }
 
     .panel {
@@ -297,14 +308,25 @@
       padding: 6px;
       overflow: auto;
       font-size: 1rem;
-      line-height: 1.5;
+      line-height: 1.1;
       outline: none;
-      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .idea-editor:empty::before {
       content: attr(data-placeholder);
       color: #9ca3af;
+    }
+
+    .idea-editor p, .idea-editor div,
+    .idea-editor ul, .idea-editor ol, .idea-editor li {
+      margin: 0;
+      padding: 0;
+    }
+
+    .idea-editor ul, .idea-editor ol {
+      padding-left: 20px;
     }
 
     .workspace textarea#auditInput {
@@ -409,6 +431,9 @@
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦</button>
               <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLineBreak">↵</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLink">🔗 Odkaz</button>
+              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="unlink">× Odkaz</button>
             </div>
             <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
           </div>
@@ -441,6 +466,9 @@
             <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertOrderedList">1. List</button>
             <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="indent">↦</button>
             <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="outdent">↤</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertLineBreak">↵</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="insertLink">🔗</button>
+            <button class="editor-btn" type="button" data-editor-target="ideaEditor" data-editor-cmd="unlink">× odkaz</button>
           </div>
           <div id="ideaEditor" class="idea-editor" contenteditable="true" data-placeholder="Sem se načte šablona nebo vygenerovaný e-mail."></div>
         </section>
@@ -492,6 +520,19 @@
     let toastTimer = null;
     const GEMINI_ASSISTANT_URL = "https://gemini.google.com/gem/5bd8204b5ebd";
 
+    // Enter creates <p> elements, not <div>
+    document.execCommand("defaultParagraphSeparator", false, "p");
+
+    // Shift+Enter = soft line break
+    [templateBodyEditor, ideaEditor].forEach(function (editor) {
+      editor.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && e.shiftKey) {
+          e.preventDefault();
+          document.execCommand("insertHTML", false, "<br>");
+        }
+      });
+    });
+
     function showToast(message) {
       if (!toast) return;
       toast.textContent = message;
@@ -512,32 +553,6 @@
 
     function getEditorById(editorId) {
       return document.getElementById(editorId);
-    }
-
-    function adjustEditorLineHeight(editorEl, delta) {
-      if (!editorEl) return;
-      const current = parseFloat(editorEl.style.lineHeight || "1.5");
-      const next = Math.min(2.2, Math.max(1.1, current + delta));
-      editorEl.style.lineHeight = next.toFixed(2);
-      showToast("Řádkování upraveno.");
-    }
-
-    function setEditorLineHeight(editorEl, value) {
-      if (!editorEl) return;
-      const numeric = parseFloat(value);
-      if (!numeric || numeric <= 0) return;
-      editorEl.style.lineHeight = String(numeric);
-      showToast(`Řádkování ${numeric}.`);
-    }
-
-    function toggleCompactSpacing(editorEl) {
-      if (!editorEl) return;
-      editorEl.classList.toggle("compact-spacing");
-      if (editorEl.classList.contains("compact-spacing")) {
-        showToast("Odebrány mezery mezi odstavci.");
-      } else {
-        showToast("Obnoveny výchozí mezery.");
-      }
     }
 
     function applyStyleToSelection(editorEl, styleMap) {
@@ -616,7 +631,12 @@
         return;
       }
       if (bodyText && bodyText.trim()) {
-        templateBodyEditor.innerHTML = escapeHtml(bodyText).replace(/\n/g, "<br>");
+        const paragraphs = bodyText.split(/\n{2,}/);
+        templateBodyEditor.innerHTML = paragraphs
+          .map(function (p) {
+            return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
+          })
+          .join("");
         return;
       }
       templateBodyEditor.innerHTML = "";
@@ -647,15 +667,6 @@
 
     function getIdeaText() {
       return htmlToPlainText(getIdeaHtml());
-    }
-
-    function getEditorPlainText(editorEl) {
-      if (!editorEl) return "";
-      const text = editorEl.innerText || "";
-      return text
-        .replace(/\r\n/g, "\n")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
     }
 
     function getMailtoTextFromEditorHtml(editorEl) {
@@ -695,9 +706,7 @@
 
         const tag = node.tagName.toLowerCase();
 
-        if (tag === "br") {
-          return "\n";
-        }
+        if (tag === "br") return "\n";
 
         if (tag === "ul" || tag === "ol") {
           let listOut = "";
@@ -711,16 +720,14 @@
           return listOut ? listOut + "\n" : "";
         }
 
-        if (tag === "li") {
-          return serializeListItem(node);
-        }
+        if (tag === "li") return serializeListItem(node);
 
         const content = serializeChildren(node).trim();
-        const blockWithSingleBreak = ["div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
-        const blockWithDoubleBreak = ["p"].includes(tag);
+        const blockSingle = ["div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
+        const blockDouble = tag === "p";
         if (!content) return "";
-        if (blockWithDoubleBreak) return content + "\n\n";
-        if (blockWithSingleBreak) return content + "\n";
+        if (blockDouble) return content + "\n\n";
+        if (blockSingle) return content + "\n";
         return content;
       }
 
@@ -737,10 +744,66 @@
         return;
       }
       if (plainValue && plainValue.trim()) {
-        ideaEditor.innerHTML = escapeHtml(plainValue).replace(/\n/g, "<br>");
+        const paragraphs = plainValue.split(/\n{2,}/);
+        ideaEditor.innerHTML = paragraphs
+          .map(function (p) {
+            return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
+          })
+          .join("");
         return;
       }
       ideaEditor.innerHTML = "";
+    }
+
+    // Build clipboard HTML with all styles inlined — email clients strip stylesheets
+    function buildEmailHtmlFromEditor() {
+      const rawHtml = getIdeaHtml();
+      if (!rawHtml) return "";
+
+      const clone = document.createElement("div");
+      clone.innerHTML = rawHtml;
+
+      const editorLineHeight = ideaEditor.style.lineHeight || "1.1";
+
+      clone.querySelectorAll("ul, ol").forEach(function (el) {
+        const prev = el.getAttribute("style") || "";
+        el.setAttribute("style", prev + ";padding-left:20px;margin:0;");
+      });
+
+      clone.querySelectorAll("p, div").forEach(function (el) {
+        const prev = el.getAttribute("style") || "";
+        el.setAttribute("style", prev + ";margin:0;padding:0;");
+      });
+
+      clone.querySelectorAll("li").forEach(function (el) {
+        const prev = el.getAttribute("style") || "";
+        el.setAttribute("style", prev + ";margin:0;padding:0;");
+      });
+
+      const wrapStyle = [
+        "font-family:Arial,Helvetica,sans-serif",
+        "font-size:14px",
+        "color:#1f2937",
+        "line-height:" + editorLineHeight,
+        "margin:0",
+        "padding:0"
+      ].join(";");
+
+      return `<!doctype html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body style="margin:0;padding:16px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2937;">
+    <div style="${wrapStyle}">${clone.innerHTML}</div>
+  </body>
+</html>`;
+    }
+
+    function resetTemplateEditor() {
+      templateProductInput.value = "";
+      templatePurposeInput.value = "";
+      templateSubjectInput.value = "";
+      templateBodyEditor.innerHTML = "";
+      editingTemplateId = null;
     }
 
     function getDefaultTemplates() {
@@ -821,9 +884,7 @@
     function syncRightEditorFromLeftDraft() {
       const draftBodyHtml = getTemplateBodyHtml();
       const draftBodyText = getTemplateBodyText();
-      if (!draftBodyHtml && !draftBodyText) {
-        return;
-      }
+      if (!draftBodyHtml && !draftBodyText) return;
       setIdeaContent(draftBodyHtml, draftBodyText);
       applyEditorFormat(ideaEditor, getEditorFormat(templateBodyEditor));
     }
@@ -843,63 +904,28 @@
       showToast("Šablona načtena pro e-mail.");
     }
 
-    function buildEmailFromTemplate(template) {
-      const language = languageInput.value;
-      if (language === "cz") {
-        return [
-          `Předmět: ${template.subject}`,
-          "",
-          "Dobrý den,",
-          "",
-          toSentence(template.body),
-          "",
-          "S pozdravem,",
-          "Daniela"
-        ].join("\n");
-      }
-      return [
-        `Subject: ${template.subject}`,
-        "",
-        "Hello,",
-        "",
-        toSentence(template.body),
-        "",
-        "Best regards,",
-        "Daniela"
-      ].join("\n");
-    }
-
     function buildEmail() {
       const language = languageInput.value;
       const idea = getIdeaText().trim();
       if (language === "cz") {
         const shortIdea = idea ? toSentence(idea) : "Děkuji za zprávu a zájem.";
         return [
-          "Předmět: Krátká reakce",
-          "",
-          "Dobrý den,",
-          "",
+          "Předmět: Krátká reakce", "",
+          "Dobrý den,", "",
           shortIdea,
           "Ráda navrhnu krátký další krok, který vám bude časově vyhovovat.",
-          "Když budete chtít, pošlu hned konkrétní termíny.",
-          "",
-          "S pozdravem,",
-          "Daniela"
+          "Když budete chtít, pošlu hned konkrétní termíny.", "",
+          "S pozdravem,", "Daniela"
         ].join("\n");
       }
-
       const shortIdea = idea ? toSentence(idea) : "Thank you for your message and interest.";
       return [
-        "Subject: Quick follow-up",
-        "",
-        "Hello,",
-        "",
+        "Subject: Quick follow-up", "",
+        "Hello,", "",
         shortIdea,
         "I would be happy to suggest a short next step that fits your schedule.",
-        "If useful, I can send available time slots right away.",
-        "",
-        "Best regards,",
-        "Daniela"
+        "If useful, I can send available time slots right away.", "",
+        "Best regards,", "Daniela"
       ].join("\n");
     }
 
@@ -924,28 +950,6 @@
 
       const body = lines.slice(bodyStartIndex).join("\n").trim();
       return { subject: subject, body: body };
-    }
-
-    function buildEmailHtmlFromEditor() {
-      const rawHtml = getIdeaHtml();
-      if (!rawHtml) return "";
-      return `<!doctype html>
-<html>
-  <body style="margin:0; padding:0;">
-    ${rawHtml}
-  </body>
-</html>`;
-    }
-
-
-
-
-    function resetTemplateEditor() {
-      templateProductInput.value = "";
-      templatePurposeInput.value = "";
-      templateSubjectInput.value = "";
-      templateBodyEditor.innerHTML = "";
-      editingTemplateId = null;
     }
 
     saveTemplateBtn.addEventListener("click", function () {
@@ -973,9 +977,7 @@
       saveTemplates();
       renderTemplates();
       resetTemplateEditor();
-      if (templateSelect.value) {
-        applySelectedTemplate();
-      }
+      if (templateSelect.value) applySelectedTemplate();
       showToast("Šablona uložena.");
     });
 
@@ -1030,9 +1032,7 @@
 
     templateSelect.addEventListener("change", function () {
       applySelectedTemplate();
-      if (!templateSelect.value) {
-        showToast("Výběr šablony zrušen.");
-      }
+      if (!templateSelect.value) showToast("Výběr šablony zrušen.");
     });
 
     templateEditSelect.addEventListener("change", function () {
@@ -1094,30 +1094,48 @@
         await navigator.clipboard.writeText(textToCopy);
         copyBtn.textContent = "Copied";
         showToast("Text zkopírován.");
-        setTimeout(function () {
-          copyBtn.textContent = "Copy";
-        }, 1200);
+        setTimeout(function () { copyBtn.textContent = "Copy"; }, 1200);
       } catch (error) {
         copyBtn.textContent = "Copy failed";
-        setTimeout(function () {
-          copyBtn.textContent = "Copy";
-        }, 1500);
+        setTimeout(function () { copyBtn.textContent = "Copy"; }, 1500);
       }
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      const text = getMailtoTextFromEditorHtml(ideaEditor);
-      if (!text) {
+      if (!getIdeaHtml()) {
         setIdeaContent("", buildEmail());
       }
 
-      const finalText = getMailtoTextFromEditorHtml(ideaEditor);
-      if (!finalText) return;
+      const formattedHtml = buildEmailHtmlFromEditor();
+      if (!formattedHtml) return;
 
-      const parts = parseEmailParts(finalText);
-      const subject = parts.subject || "Email";
-      const plainBody = parts.body || finalText;
-      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(plainBody)}`;
+      // Subject: prefer template field, fall back to parsing editor text
+      let subject = "";
+      const selectedTpl = getSelectedTemplate();
+      if (selectedTpl && selectedTpl.subject) {
+        subject = selectedTpl.subject;
+      } else {
+        const parts = parseEmailParts(getMailtoTextFromEditorHtml(ideaEditor));
+        subject = parts.subject || "Email";
+      }
+
+      const plainBody = getMailtoTextFromEditorHtml(ideaEditor);
+      const mailtoUrl = "mailto:?subject=" + encodeURIComponent(subject);
+
+      if (navigator.clipboard && window.ClipboardItem) {
+        const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
+        const textBlob = new Blob([plainBody], { type: "text/plain" });
+        navigator.clipboard.write([
+          new ClipboardItem({ "text/html": htmlBlob, "text/plain": textBlob })
+        ]).then(function () {
+          window.location.href = mailtoUrl;
+          showToast("Otevřen nový e-mail. Vlož Ctrl+V pro přesný vzhled.");
+        }).catch(function () {
+          window.location.href = mailtoUrl;
+          showToast("Otevřen nový e-mail.");
+        });
+        return;
+      }
       window.location.href = mailtoUrl;
       showToast("Otevřen nový e-mail.");
     });
@@ -1127,9 +1145,38 @@
         const editorId = btn.getAttribute("data-editor-target");
         const targetEditor = getEditorById(editorId);
         if (!targetEditor) return;
+
         const cmd = btn.getAttribute("data-editor-cmd");
         if (!cmd) return;
+
         targetEditor.focus();
+
+        if (cmd === "insertLineBreak") {
+          document.execCommand("insertHTML", false, "<br>");
+          return;
+        }
+
+        if (cmd === "insertLink") {
+          const url = prompt("URL:", "https://");
+          if (!url || url.trim() === "https://") return;
+          const clean = url.trim();
+          const sel = window.getSelection();
+          const hasSelection = sel && !sel.isCollapsed && targetEditor.contains(sel.anchorNode);
+          if (hasSelection) {
+            document.execCommand("createLink", false, clean);
+            targetEditor.querySelectorAll('a[href="' + clean + '"]').forEach(function (a) {
+              a.target = "_blank";
+              a.rel = "noopener noreferrer";
+            });
+          } else {
+            const text = prompt("Text odkazu:", clean) || clean;
+            document.execCommand("insertHTML", false,
+              '<a href="' + clean + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(text) + "</a>");
+          }
+          showToast("Odkaz vložen.");
+          return;
+        }
+
         document.execCommand(cmd, false);
       });
     });
