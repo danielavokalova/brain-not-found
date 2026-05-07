@@ -14,9 +14,7 @@
       --border: #e5e7eb;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -39,21 +37,11 @@
       overflow: hidden;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 1.7rem;
-    }
+    h1 { margin: 0; font-size: 1.7rem; }
 
-    .sub {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
+    .sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
-    .grid {
-      display: grid;
-      gap: 4px;
-    }
+    .grid { display: grid; gap: 4px; }
 
     .layout {
       display: grid;
@@ -65,33 +53,14 @@
     }
 
     @media (max-width: 1100px) {
-      body {
-        height: auto;
-        overflow: auto;
-      }
-
-      .card {
-        height: auto;
-        overflow: visible;
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
+      body { height: auto; overflow: auto; }
+      .card { height: auto; overflow: visible; }
+      .layout { grid-template-columns: 1fr; min-height: auto; }
     }
 
-    label {
-      display: grid;
-      gap: 3px;
-      font-size: 0.98rem;
-      font-weight: 600;
-      margin: 0;
-    }
+    label { display: grid; gap: 3px; font-size: 0.98rem; font-weight: 600; margin: 0; }
 
-    select,
-    input,
-    textarea {
+    select, input, textarea {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -101,27 +70,18 @@
       background: #fff;
     }
 
-    textarea {
-      min-height: 220px;
-      resize: vertical;
-      font-size: 1.05rem;
-      line-height: 1.45;
-    }
+    textarea { min-height: 220px; resize: vertical; font-size: 1.05rem; line-height: 1.45; }
 
-    .small-textarea {
-      min-height: 220px;
-      height: 34vh;
-    }
-
-    .editor-wrap {
-      display: grid;
-      gap: 8px;
-    }
+    .editor-wrap { display: grid; gap: 8px; }
 
     .editor-toolbar {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px;
+      background: #f9fafb;
     }
 
     .editor-btn {
@@ -133,6 +93,7 @@
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
+      min-height: 34px;
     }
 
     .rich-editor {
@@ -150,27 +111,18 @@
       overflow-wrap: break-word;
     }
 
-    .rich-editor:empty::before {
-      content: attr(data-placeholder);
-      color: #9ca3af;
-    }
+    .rich-editor:empty::before { content: attr(data-placeholder); color: #9ca3af; }
 
     .rich-editor p, .rich-editor div,
-    .rich-editor ul, .rich-editor ol, .rich-editor li {
-      margin: 0;
-      padding: 0;
-    }
-
-    .rich-editor ul, .rich-editor ol {
-      padding-left: 20px;
-    }
+    .rich-editor ul, .rich-editor ol, .rich-editor li { margin: 0; padding: 0; }
+    .rich-editor ul, .rich-editor ol { padding-left: 20px; }
 
     .panel {
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 6px;
       background: #fff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
       min-height: 0;
       height: 100%;
       display: flex;
@@ -178,81 +130,23 @@
       overflow: hidden;
     }
 
-    .panel h2 {
-      margin: 0 0 2px;
-      font-size: 1rem;
-      font-weight: 700;
-    }
+    .panel h2 { margin: 0 0 2px; font-size: 1rem; font-weight: 700; }
 
-    .muted {
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin: 0 0 2px;
-      line-height: 1.25;
-    }
+    .muted { color: var(--muted); font-size: 0.82rem; margin: 0 0 2px; line-height: 1.25; }
 
-    .workspace .muted {
-      display: none;
-    }
+    .workspace .muted { display: none; }
+    .workspace .grid { gap: 0; }
+    .workspace .scroll-area { display: flex; flex-direction: column; gap: 2px; overflow: hidden; padding-right: 0; }
+    .workspace label { gap: 1px; font-size: 0.9rem; margin: 0; }
+    .workspace .field-compact { margin: 0; padding: 0; }
+    .workspace .section-label { font-size: 0.9rem; font-weight: 600; margin: 0; line-height: 1.1; }
 
-    .workspace .grid {
-      gap: 0;
-    }
+    .template-select { min-height: auto; height: 34px; font-size: 0.92rem; padding: 4px 8px; margin: 0; }
+    .language-compact-select { width: 72px; height: 34px; padding: 4px 8px; font-size: 0.86rem; }
 
-    .workspace .scroll-area {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      overflow: hidden;
-      padding-right: 0;
-    }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
 
-    .workspace label {
-      gap: 1px;
-      font-size: 0.9rem;
-      margin: 0;
-    }
-
-    .workspace .field-compact {
-      margin: 0;
-      padding: 0;
-    }
-
-    .workspace .section-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin: 0;
-      line-height: 1.1;
-    }
-
-    .template-select {
-      min-height: auto;
-      height: 34px;
-      font-size: 0.92rem;
-      padding: 4px 8px;
-      margin: 0;
-    }
-
-    .language-compact-select {
-      width: 72px;
-      height: 34px;
-      padding: 4px 8px;
-      font-size: 0.86rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-
-    .panel-actions {
-      margin-top: 2px;
-      padding-top: 2px;
-      border-top: 1px solid var(--border);
-      align-items: center;
-    }
+    .panel-actions { margin-top: 2px; padding-top: 2px; border-top: 1px solid var(--border); align-items: center; }
 
     button {
       border: 0;
@@ -265,20 +159,9 @@
       min-height: 36px;
     }
 
-    .primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .ghost {
-      background: #f3f4f6;
-      color: #111827;
-    }
+    .primary { background: var(--accent); color: white; }
+    .secondary { background: #e5e7eb; color: #111827; }
+    .ghost { background: #f3f4f6; color: #111827; }
 
     .tiny-link-btn {
       background: #f3f4f6;
@@ -290,13 +173,7 @@
       border-radius: 8px;
     }
 
-    .back {
-      display: inline-block;
-      margin-top: 12px;
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
+    .back { display: inline-block; margin-top: 12px; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
 
     .idea-editor {
       border: 1px solid var(--border);
@@ -314,57 +191,18 @@
       overflow-wrap: break-word;
     }
 
-    .idea-editor:empty::before {
-      content: attr(data-placeholder);
-      color: #9ca3af;
-    }
+    .idea-editor:empty::before { content: attr(data-placeholder); color: #9ca3af; }
 
     .idea-editor p, .idea-editor div,
-    .idea-editor ul, .idea-editor ol, .idea-editor li {
-      margin: 0;
-      padding: 0;
-    }
+    .idea-editor ul, .idea-editor ol, .idea-editor li { margin: 0; padding: 0; }
+    .idea-editor ul, .idea-editor ol { padding-left: 20px; }
 
-    .idea-editor ul, .idea-editor ol {
-      padding-left: 20px;
-    }
+    .scroll-area { flex: 1; min-height: 0; overflow: auto; padding-right: 0; }
 
-    .workspace textarea#auditInput {
-      min-height: 140px;
-      height: 18vh;
-    }
+    .compact-spacing p, .compact-spacing li,
+    .compact-spacing ul, .compact-spacing ol { margin-top: 0 !important; margin-bottom: 0 !important; }
 
-    .scroll-area {
-      flex: 1;
-      min-height: 0;
-      overflow: auto;
-      padding-right: 0;
-    }
-
-    .editor-toolbar {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px;
-      background: #f9fafb;
-    }
-
-    .editor-toolbar .editor-btn {
-      min-height: 34px;
-    }
-
-    .compact-spacing p,
-    .compact-spacing li,
-    .compact-spacing ul,
-    .compact-spacing ol {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    .footer {
-      display: flex;
-      align-items: center;
-      min-height: 18px;
-    }
+    .footer { display: flex; align-items: center; min-height: 18px; }
 
     .toast {
       position: fixed;
@@ -375,7 +213,7 @@
       padding: 10px 14px;
       border-radius: 10px;
       font-size: 0.92rem;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.24);
       opacity: 0;
       transform: translateY(8px);
       pointer-events: none;
@@ -383,70 +221,182 @@
       z-index: 9999;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── TABS ── */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      margin-bottom: 6px;
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
     }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      padding: 5px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 0;
+      min-height: auto;
+    }
+
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .tab-pane {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .pane-hidden { display: none; }
+
+    /* ── LIBRARY ── */
+    .lib-search {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .lib-search:focus { border-color: var(--accent); }
+
+    .lib-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-height: 0;
+    }
+
+    .lib-item {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .lib-item:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(37,99,235,0.1);
+    }
+
+    .lib-item-header { display: flex; align-items: center; gap: 7px; }
+
+    .lib-item-title { font-size: 0.86rem; font-weight: 700; color: var(--text); flex: 1; line-height: 1.3; }
+
+    .lib-type {
+      display: inline-block;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .lib-type--email  { background: #dbeafe; color: #1e40af; }
+    .lib-type--prompt { background: #ede9fe; color: #5b21b6; }
+
+    .lib-item-tags { display: flex; flex-wrap: wrap; gap: 3px; }
+
+    .lib-tag { font-size: 0.66rem; background: #f3f4f6; color: var(--muted); border-radius: 20px; padding: 1px 6px; }
   </style>
 </head>
 <body>
   <main class="card">
     <h1>Email Generator</h1>
-    <p class="sub">Praktické rozložení: vlevo šablony, vpravo velké pracovní okno.</p>
+    <p class="sub">Vlevo knihovna šablon nebo editor, vpravo pracovní okno.</p>
 
     <section class="layout">
+
+      <!-- LEFT PANEL -->
       <aside class="panel">
-        <h2>Šablony e-mailů</h2>
-        <p class="muted">Definuj produkt, účel, subject a tělo šablony. Uložené šablony se pak vybírají vpravo při tvorbě e-mailu.</p>
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tab-btn-library">Knihovna</button>
+          <button class="tab-btn" id="tab-btn-editor">Editor šablon</button>
+        </div>
 
-        <section class="grid scroll-area">
-          <label for="templateEditSelect">
-            Vyber šablonu k editaci
-            <select id="templateEditSelect" class="template-select"></select>
-          </label>
+        <!-- LIBRARY PANE -->
+        <div id="pane-library" class="tab-pane">
+          <input type="search" id="lib-search" class="lib-search" placeholder="Hledat šablony…" autocomplete="off" />
+          <div id="lib-list" class="lib-list"></div>
+        </div>
 
-          <label for="templateProduct">
-            Produkt
-            <input id="templateProduct" placeholder="Např. AI konzultace" />
-          </label>
+        <!-- EDITOR PANE -->
+        <div id="pane-editor" class="tab-pane pane-hidden">
+          <section class="grid scroll-area">
+            <label for="templateEditSelect">
+              Vyber šablonu k editaci
+              <select id="templateEditSelect" class="template-select"></select>
+            </label>
 
-          <label for="templatePurpose">
-            Účel
-            <input id="templatePurpose" placeholder="Např. Follow-up po callu" />
-          </label>
+            <label for="templateProduct">
+              Produkt
+              <input id="templateProduct" placeholder="Např. AI konzultace" />
+            </label>
 
-          <label for="templateSubject">
-            Subject
-            <input id="templateSubject" placeholder="Např. Quick follow-up after our call" />
-          </label>
+            <label for="templatePurpose">
+              Účel
+              <input id="templatePurpose" placeholder="Např. Follow-up po callu" />
+            </label>
 
-          <label for="templateBodyEditor">Tělo e-mailu</label>
-          <div class="editor-wrap">
-            <div class="editor-toolbar">
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="bold"><strong>B</strong></button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="italic"><em>I</em></button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="underline"><u>U</u></button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="removeFormat">Tx</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertUnorderedList">• List</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLineBreak">↵</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLink">🔗 Odkaz</button>
-              <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="unlink">× Odkaz</button>
+            <label for="templateSubject">
+              Subject
+              <input id="templateSubject" placeholder="Např. Quick follow-up after our call" />
+            </label>
+
+            <label for="templateBodyEditor">Tělo e-mailu</label>
+            <div class="editor-wrap">
+              <div class="editor-toolbar">
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="bold"><strong>B</strong></button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="italic"><em>I</em></button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="underline"><u>U</u></button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="removeFormat">Tx</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertUnorderedList">• List</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertOrderedList">1. List</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="indent">↦</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="outdent">↤</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLineBreak">↵</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="insertLink">🔗 Odkaz</button>
+                <button class="editor-btn" type="button" data-editor-target="templateBodyEditor" data-editor-cmd="unlink">× Odkaz</button>
+              </div>
+              <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
             </div>
-            <div id="templateBodyEditor" class="rich-editor" contenteditable="true" data-placeholder="Sem napiš základ šablony e-mailu..."></div>
+          </section>
+          <div class="actions panel-actions">
+            <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
+            <button class="ghost" id="loadTemplateToEditorBtn" type="button">Načíst do editoru</button>
+            <button class="ghost" id="updateTemplateBtn" type="button">Uložit změny</button>
+            <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
+            <button class="ghost" id="loadDefaultsBtn" type="button">+ Přidat výchozí</button>
           </div>
-        </section>
-        <div class="actions panel-actions">
-          <button class="primary" id="saveTemplateBtn" type="button">Uložit šablonu</button>
-          <button class="ghost" id="loadTemplateToEditorBtn" type="button">Načíst do editoru</button>
-          <button class="ghost" id="updateTemplateBtn" type="button">Uložit změny</button>
-          <button class="secondary" id="deleteSelectedBtn" type="button">Smazat vybranou</button>
-          <button class="ghost" id="loadDefaultsBtn" type="button">+ Přidat výchozí</button>
         </div>
       </aside>
 
+      <!-- RIGHT PANEL -->
       <section class="panel workspace">
         <h2>Tvorba emailu</h2>
         <p class="muted">Vyber jazyk, napiš zadání a jedním klikem vygeneruj výsledek.</p>
@@ -487,7 +437,7 @@
     </section>
 
     <div class="footer">
-      <a class="back" href="../index.html">Zpět na dashboard</a>
+      <a class="back" href="https://danielavokalova.github.io/brain-not-found/">Zpět na dashboard</a>
     </div>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -514,16 +464,104 @@
     const loadDefaultsBtn = document.getElementById("loadDefaultsBtn");
     const editorButtons = document.querySelectorAll("[data-editor-target]");
     const toast = document.getElementById("toast");
+    const libSearchInput = document.getElementById("lib-search");
+    const libList = document.getElementById("lib-list");
+    const tabBtnLibrary = document.getElementById("tab-btn-library");
+    const tabBtnEditor = document.getElementById("tab-btn-editor");
+    const paneLibrary = document.getElementById("pane-library");
+    const paneEditor = document.getElementById("pane-editor");
 
     let templates = [];
     let editingTemplateId = null;
     let toastTimer = null;
+    let librarySelectedSubject = "";
     const GEMINI_ASSISTANT_URL = "https://gemini.google.com/gem/5bd8204b5ebd";
 
-    // Enter creates <p> elements, not <div>
+    const LIBRARY_TEMPLATES = [
+      {
+        id: "email-reply-to-interest", type: "email",
+        title: "Reply to client interest",
+        tags: ["client", "reply", "interest", "inquiry", "inbound"],
+        subject: "Thanks for your interest in {{service_name}}",
+        content: "Hi {{name}},\n\nthanks for reaching out and for your interest in {{service_name}}.\nI would be happy to help.\n\nCould you please share:\n- what exactly you need,\n- your ideal timeline,\n- and your budget (if available)?\n\nThen I can suggest the next best step.\n\nThanks,\n{{sender_name}}"
+      },
+      {
+        id: "email-follow-up", type: "email",
+        title: "Follow-up reminder",
+        tags: ["follow-up", "reminder", "client", "chase", "no-reply"],
+        subject: "Quick follow-up on {{topic}}",
+        content: "Hi {{name}},\n\njust following up on my previous email about {{topic}}.\nIs this still relevant for you?\n\nIf yes, just reply and I will propose the next step.\n\nThanks,\n{{sender_name}}"
+      },
+      {
+        id: "email-polite-rejection", type: "email",
+        title: "Polite rejection",
+        tags: ["rejection", "decline", "no", "unavailable", "boundary"],
+        subject: "Thank you for reaching out",
+        content: "Hi {{name}},\n\nthank you for your message about {{topic}}.\nUnfortunately, I cannot take this on right now.\n\nI do not want to commit to something I cannot deliver well and on time.\nIf helpful, I can recommend an alternative.\n\nThanks for understanding,\n{{sender_name}}"
+      },
+      {
+        id: "email-proposal-send", type: "email",
+        title: "Send proposal / offer",
+        tags: ["proposal", "offer", "pitch", "quote", "sales"],
+        subject: "Proposal for {{project_name}}",
+        content: "Hi {{name}},\n\nthank you for the conversation — it was great to learn more about what you need.\n\nI have prepared a proposal for {{project_name}}. You can find it attached / at the link below.\n\nHappy to walk you through it on a quick call if that helps.\n\nLooking forward to hearing from you,\n{{sender_name}}"
+      },
+      {
+        id: "email-meeting-confirmation", type: "email",
+        title: "Confirm a meeting",
+        tags: ["meeting", "confirm", "calendar", "schedule", "call"],
+        subject: "Confirmed: {{meeting_topic}} on {{date}}",
+        content: "Hi {{name}},\n\njust confirming our meeting on {{date}} at {{time}}.\n\nWe will cover: {{meeting_topic}}.\n\nIf anything changes, please let me know in advance.\n\nSee you then,\n{{sender_name}}"
+      },
+      {
+        id: "prompt-rewrite-professional", type: "prompt",
+        title: "Rewrite email — professional tone",
+        tags: ["rewrite", "edit", "tone", "professional", "polish"],
+        content: "Rewrite the following email in a professional but friendly tone.\nKeep it concise, clear, and direct.\nRemove filler words and redundancy.\nPreserve the original intent.\n\n[PASTE EMAIL HERE]"
+      },
+      {
+        id: "prompt-summarize-thread", type: "prompt",
+        title: "Summarize email thread",
+        tags: ["summary", "thread", "tldr", "overview", "digest"],
+        content: "Summarize this email thread in bullet points.\nFocus on:\n- Key decisions made\n- Action items (with owners if mentioned)\n- Any unresolved questions\n\n[PASTE THREAD HERE]"
+      },
+      {
+        id: "prompt-cold-outreach", type: "prompt",
+        title: "Write cold outreach email",
+        tags: ["cold", "outreach", "sales", "pitch", "new client", "prospecting"],
+        content: "Write a cold outreach email to {{name}} at {{company}}.\nThe purpose is: {{goal}}.\n\nRules:\n- Under 5 sentences\n- No buzzwords\n- Value must be clear in the first line\n- End with a specific, low-commitment CTA"
+      },
+      {
+        id: "prompt-improve-subject-line", type: "prompt",
+        title: "Improve email subject line",
+        tags: ["subject", "subject line", "open rate", "headline", "optimize"],
+        content: "Generate 5 alternative subject lines for the email below.\nMake them specific, curiosity-driven, and under 50 characters.\nAvoid clickbait.\n\n[PASTE EMAIL HERE]"
+      },
+      {
+        id: "prompt-extract-action-items", type: "prompt",
+        title: "Extract action items from text",
+        tags: ["action items", "tasks", "extract", "meeting notes", "todo"],
+        content: "Extract all action items from the text below.\nFor each item include:\n- What needs to be done\n- Who is responsible (if mentioned)\n- Deadline (if mentioned)\n\n[PASTE TEXT HERE]"
+      }
+    ];
+
+    // Tab switching
+    tabBtnLibrary.addEventListener("click", function () {
+      tabBtnLibrary.classList.add("active");
+      tabBtnEditor.classList.remove("active");
+      paneLibrary.classList.remove("pane-hidden");
+      paneEditor.classList.add("pane-hidden");
+    });
+
+    tabBtnEditor.addEventListener("click", function () {
+      tabBtnEditor.classList.add("active");
+      tabBtnLibrary.classList.remove("active");
+      paneEditor.classList.remove("pane-hidden");
+      paneLibrary.classList.add("pane-hidden");
+    });
+
     document.execCommand("defaultParagraphSeparator", false, "p");
 
-    // Shift+Enter = soft line break
     [templateBodyEditor, ideaEditor].forEach(function (editor) {
       editor.addEventListener("keydown", function (e) {
         if (e.key === "Enter" && e.shiftKey) {
@@ -537,12 +575,8 @@
       if (!toast) return;
       toast.textContent = message;
       toast.classList.add("show");
-      if (toastTimer) {
-        clearTimeout(toastTimer);
-      }
-      toastTimer = setTimeout(function () {
-        toast.classList.remove("show");
-      }, 1600);
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1600);
     }
 
     function toSentence(value) {
@@ -551,92 +585,41 @@
       return /[.!?]$/.test(trimmed) ? trimmed : trimmed + ".";
     }
 
-    function getEditorById(editorId) {
-      return document.getElementById(editorId);
-    }
-
-    function applyStyleToSelection(editorEl, styleMap) {
-      if (!editorEl) return false;
-      const selection = window.getSelection();
-      if (!selection || selection.rangeCount === 0) return false;
-      const range = selection.getRangeAt(0);
-      if (range.collapsed) return false;
-      if (!editorEl.contains(range.commonAncestorContainer)) return false;
-
-      const wrapper = document.createElement("span");
-      Object.keys(styleMap).forEach(function (key) {
-        wrapper.style[key] = styleMap[key];
-      });
-
-      try {
-        range.surroundContents(wrapper);
-      } catch (error) {
-        const extracted = range.extractContents();
-        wrapper.appendChild(extracted);
-        range.insertNode(wrapper);
-      }
-
-      selection.removeAllRanges();
-      return true;
-    }
+    function getEditorById(editorId) { return document.getElementById(editorId); }
 
     function escapeHtml(value) {
-      return value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+      return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     function htmlToPlainText(html) {
       const temp = document.createElement("div");
       temp.innerHTML = html || "";
-
       temp.querySelectorAll("li").forEach(function (li) {
         li.prepend(document.createTextNode("• "));
         li.appendChild(document.createTextNode("\n"));
       });
-
       temp.querySelectorAll("ul, ol").forEach(function (list) {
         list.appendChild(document.createTextNode("\n"));
       });
-
-      temp.querySelectorAll("br").forEach(function (el) {
-        el.replaceWith("\n");
-      });
-
+      temp.querySelectorAll("br").forEach(function (el) { el.replaceWith("\n"); });
       temp.querySelectorAll("p, div").forEach(function (el) {
-        if (!el.textContent.endsWith("\n")) {
-          el.appendChild(document.createTextNode("\n"));
-        }
+        if (!el.textContent.endsWith("\n")) el.appendChild(document.createTextNode("\n"));
       });
-
-      const text = temp.textContent || "";
-      return text
+      return (temp.textContent || "")
         .replace(/[ \t]+\n/g, "\n")
         .replace(/\n{3,}/g, "\n\n")
         .trim();
     }
 
-    function getTemplateBodyHtml() {
-      return (templateBodyEditor.innerHTML || "").trim();
-    }
-
-    function getTemplateBodyText() {
-      return htmlToPlainText(getTemplateBodyHtml());
-    }
+    function getTemplateBodyHtml() { return (templateBodyEditor.innerHTML || "").trim(); }
+    function getTemplateBodyText() { return htmlToPlainText(getTemplateBodyHtml()); }
 
     function setTemplateBodyContent(bodyHtml, bodyText) {
-      if (bodyHtml && bodyHtml.trim()) {
-        templateBodyEditor.innerHTML = bodyHtml;
-        return;
-      }
+      if (bodyHtml && bodyHtml.trim()) { templateBodyEditor.innerHTML = bodyHtml; return; }
       if (bodyText && bodyText.trim()) {
-        const paragraphs = bodyText.split(/\n{2,}/);
-        templateBodyEditor.innerHTML = paragraphs
-          .map(function (p) {
-            return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
-          })
-          .join("");
+        templateBodyEditor.innerHTML = bodyText.split(/\n{2,}/).map(function (p) {
+          return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
+        }).join("");
         return;
       }
       templateBodyEditor.innerHTML = "";
@@ -644,30 +627,19 @@
 
     function getEditorFormat(editorEl) {
       if (!editorEl) return {};
-      return {
-        lineHeight: editorEl.style.lineHeight || "",
-        compactSpacing: editorEl.classList.contains("compact-spacing")
-      };
+      return { lineHeight: editorEl.style.lineHeight || "", compactSpacing: editorEl.classList.contains("compact-spacing") };
     }
 
     function applyEditorFormat(editorEl, format) {
       if (!editorEl) return;
       const safeFormat = format || {};
       editorEl.style.lineHeight = safeFormat.lineHeight || "";
-      if (safeFormat.compactSpacing) {
-        editorEl.classList.add("compact-spacing");
-      } else {
-        editorEl.classList.remove("compact-spacing");
-      }
+      if (safeFormat.compactSpacing) editorEl.classList.add("compact-spacing");
+      else editorEl.classList.remove("compact-spacing");
     }
 
-    function getIdeaHtml() {
-      return (ideaEditor.innerHTML || "").trim();
-    }
-
-    function getIdeaText() {
-      return htmlToPlainText(getIdeaHtml());
-    }
+    function getIdeaHtml() { return (ideaEditor.innerHTML || "").trim(); }
+    function getIdeaText() { return htmlToPlainText(getIdeaHtml()); }
 
     function getMailtoTextFromEditorHtml(editorEl) {
       if (!editorEl) return "";
@@ -676,126 +648,75 @@
 
       function serializeChildren(node) {
         let out = "";
-        node.childNodes.forEach(function (child) {
-          out += serializeNode(child);
-        });
+        node.childNodes.forEach(function (child) { out += serializeNode(child); });
         return out;
       }
 
       function normalizeInline(text) {
-        return (text || "")
-          .replace(/\r\n/g, "\n")
-          .replace(/[ \t]+\n/g, "\n")
-          .replace(/\n{2,}/g, "\n")
-          .trim();
+        return (text || "").replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n{2,}/g, "\n").trim();
       }
 
       function serializeListItem(liNode) {
         const raw = normalizeInline(serializeChildren(liNode));
-        if (!raw) return "";
-        return "• " + raw + "\n";
+        return raw ? "• " + raw + "\n" : "";
       }
 
       function serializeNode(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-          return node.nodeValue || "";
-        }
-        if (node.nodeType !== Node.ELEMENT_NODE) {
-          return "";
-        }
-
+        if (node.nodeType === Node.TEXT_NODE) return node.nodeValue || "";
+        if (node.nodeType !== Node.ELEMENT_NODE) return "";
         const tag = node.tagName.toLowerCase();
-
         if (tag === "br") return "\n";
-
         if (tag === "ul" || tag === "ol") {
           let listOut = "";
           Array.from(node.children).forEach(function (child) {
-            if (child.tagName && child.tagName.toLowerCase() === "li") {
-              listOut += serializeListItem(child);
-            } else {
-              listOut += serializeNode(child);
-            }
+            listOut += child.tagName && child.tagName.toLowerCase() === "li"
+              ? serializeListItem(child) : serializeNode(child);
           });
           return listOut ? listOut + "\n" : "";
         }
-
         if (tag === "li") return serializeListItem(node);
-
         const content = serializeChildren(node).trim();
-        const blockSingle = ["div", "section", "article", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6"].includes(tag);
-        const blockDouble = tag === "p";
         if (!content) return "";
-        if (blockDouble) return content + "\n\n";
-        if (blockSingle) return content + "\n";
+        if (tag === "p") return content + "\n\n";
+        if (["div","section","article","blockquote","h1","h2","h3","h4","h5","h6"].includes(tag)) return content + "\n";
         return content;
       }
 
       return serializeChildren(root)
-        .replace(/\r\n/g, "\n")
-        .replace(/[ \t]+\n/g, "\n")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
+        .replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
     }
 
     function setIdeaContent(htmlValue, plainValue) {
-      if (htmlValue && htmlValue.trim()) {
-        ideaEditor.innerHTML = htmlValue;
-        return;
-      }
+      if (htmlValue && htmlValue.trim()) { ideaEditor.innerHTML = htmlValue; return; }
       if (plainValue && plainValue.trim()) {
-        const paragraphs = plainValue.split(/\n{2,}/);
-        ideaEditor.innerHTML = paragraphs
-          .map(function (p) {
-            return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
-          })
-          .join("");
+        ideaEditor.innerHTML = plainValue.split(/\n{2,}/).map(function (p) {
+          return "<p>" + escapeHtml(p.replace(/\n/g, " ").trim()) + "</p>";
+        }).join("");
         return;
       }
       ideaEditor.innerHTML = "";
     }
 
-    // Build clipboard HTML with all styles inlined — email clients strip stylesheets
     function buildEmailHtmlFromEditor() {
       const rawHtml = getIdeaHtml();
       if (!rawHtml) return "";
-
       const clone = document.createElement("div");
       clone.innerHTML = rawHtml;
-
       const editorLineHeight = ideaEditor.style.lineHeight || "1.1";
-
       clone.querySelectorAll("ul, ol").forEach(function (el) {
-        const prev = el.getAttribute("style") || "";
-        el.setAttribute("style", prev + ";padding-left:20px;margin:0;");
+        el.setAttribute("style", (el.getAttribute("style") || "") + ";padding-left:20px;margin:0;");
       });
-
       clone.querySelectorAll("p, div").forEach(function (el) {
-        const prev = el.getAttribute("style") || "";
-        el.setAttribute("style", prev + ";margin:0;padding:0;");
+        el.setAttribute("style", (el.getAttribute("style") || "") + ";margin:0;padding:0;");
       });
-
       clone.querySelectorAll("li").forEach(function (el) {
-        const prev = el.getAttribute("style") || "";
-        el.setAttribute("style", prev + ";margin:0;padding:0;");
+        el.setAttribute("style", (el.getAttribute("style") || "") + ";margin:0;padding:0;");
       });
-
       const wrapStyle = [
-        "font-family:Arial,Helvetica,sans-serif",
-        "font-size:14px",
-        "color:#1f2937",
-        "line-height:" + editorLineHeight,
-        "margin:0",
-        "padding:0"
+        "font-family:Arial,Helvetica,sans-serif", "font-size:14px", "color:#1f2937",
+        "line-height:" + editorLineHeight, "margin:0", "padding:0"
       ].join(";");
-
-      return `<!doctype html>
-<html>
-  <head><meta charset="UTF-8"></head>
-  <body style="margin:0;padding:16px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2937;">
-    <div style="${wrapStyle}">${clone.innerHTML}</div>
-  </body>
-</html>`;
+      return `<!doctype html>\n<html>\n  <head><meta charset="UTF-8"></head>\n  <body style="margin:0;padding:16px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1f2937;">\n    <div style="${wrapStyle}">${clone.innerHTML}</div>\n  </body>\n</html>`;
     }
 
     function resetTemplateEditor() {
@@ -806,69 +727,38 @@
       editingTemplateId = null;
     }
 
-    function getDefaultTemplates() {
-      return [];
-    }
+    function getDefaultTemplates() { return []; }
 
     function loadTemplates() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        templates = getDefaultTemplates();
-        saveTemplates();
-        return;
-      }
+      if (!raw) { templates = getDefaultTemplates(); saveTemplates(); return; }
       try {
         const parsed = JSON.parse(raw);
         templates = Array.isArray(parsed) ? parsed : getDefaultTemplates();
-      } catch (error) {
-        templates = getDefaultTemplates();
-      }
+      } catch (e) { templates = getDefaultTemplates(); }
     }
 
-    function saveTemplates() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
-    }
+    function saveTemplates() { localStorage.setItem(STORAGE_KEY, JSON.stringify(templates)); }
 
     function fillTemplateSelect(selectEl) {
       selectEl.innerHTML = "";
-
       const defaultOption = document.createElement("option");
       defaultOption.value = "";
-      defaultOption.textContent = "Vyber šablonu";
+      defaultOption.textContent = templates.length === 0 ? "Žádná šablona" : "Vyber šablonu";
       selectEl.appendChild(defaultOption);
-
       templates.forEach(function (tpl) {
         const option = document.createElement("option");
         option.value = tpl.id;
-        option.textContent = `${tpl.product} - ${tpl.purpose}`;
+        option.textContent = tpl.product + " - " + tpl.purpose;
         selectEl.appendChild(option);
       });
-
-      if (templates.length === 0) {
-        defaultOption.textContent = "Žádná šablona";
-      }
     }
 
-    function renderTemplateSelect() {
-      fillTemplateSelect(templateSelect);
-      fillTemplateSelect(templateEditSelect);
-    }
+    function renderTemplateSelect() { fillTemplateSelect(templateSelect); fillTemplateSelect(templateEditSelect); }
 
-    function getSelectedTemplateById(templateId) {
-      return templates.find(function (tpl) {
-        return tpl.id === templateId;
-      });
-    }
-
-    function getSelectedTemplate() {
-      const selectedId = templateSelect.value;
-      return getSelectedTemplateById(selectedId);
-    }
-
-    function getSelectedTemplateForEditor() {
-      const selectedId = templateEditSelect.value;
-      return getSelectedTemplateById(selectedId);
-    }
+    function getSelectedTemplateById(id) { return templates.find(function (t) { return t.id === id; }); }
+    function getSelectedTemplate() { return getSelectedTemplateById(templateSelect.value); }
+    function getSelectedTemplateForEditor() { return getSelectedTemplateById(templateEditSelect.value); }
 
     function fillEditorFromTemplate(template) {
       if (!template) return;
@@ -889,16 +779,9 @@
       applyEditorFormat(ideaEditor, getEditorFormat(templateBodyEditor));
     }
 
-    function renderTemplates() {
-      renderTemplateSelect();
-    }
-
     function applySelectedTemplate() {
       const selected = getSelectedTemplate();
-      if (!selected) {
-        ideaEditor.innerHTML = "";
-        return;
-      }
+      if (!selected) { ideaEditor.innerHTML = ""; return; }
       setIdeaContent(selected.bodyHtml, selected.body);
       applyEditorFormat(ideaEditor, selected.bodyFormat);
       showToast("Šablona načtena pro e-mail.");
@@ -909,48 +792,96 @@
       const idea = getIdeaText().trim();
       if (language === "cz") {
         const shortIdea = idea ? toSentence(idea) : "Děkuji za zprávu a zájem.";
-        return [
-          "Předmět: Krátká reakce", "",
-          "Dobrý den,", "",
-          shortIdea,
+        return ["Předmět: Krátká reakce", "", "Dobrý den,", "", shortIdea,
           "Ráda navrhnu krátký další krok, který vám bude časově vyhovovat.",
-          "Když budete chtít, pošlu hned konkrétní termíny.", "",
-          "S pozdravem,", "Daniela"
-        ].join("\n");
+          "Když budete chtít, pošlu hned konkrétní termíny.", "", "S pozdravem,", "Daniela"].join("\n");
       }
       const shortIdea = idea ? toSentence(idea) : "Thank you for your message and interest.";
-      return [
-        "Subject: Quick follow-up", "",
-        "Hello,", "",
-        shortIdea,
+      return ["Subject: Quick follow-up", "", "Hello,", "", shortIdea,
         "I would be happy to suggest a short next step that fits your schedule.",
-        "If useful, I can send available time slots right away.", "",
-        "Best regards,", "Daniela"
-      ].join("\n");
-    }
-
-    function isRichTemplateContent() {
-      const html = getIdeaHtml();
-      return /<(ul|ol|li|strong|b|span|p|div)\b/i.test(html);
+        "If useful, I can send available time slots right away.", "", "Best regards,", "Daniela"].join("\n");
     }
 
     function parseEmailParts(emailText) {
       const lines = emailText.split("\n");
       const firstLine = lines[0] || "";
-      let subject = "";
-      let bodyStartIndex = 0;
+      let subject = "", bodyStartIndex = 0;
+      if (firstLine.startsWith("Subject:")) { subject = firstLine.replace("Subject:", "").trim(); bodyStartIndex = 2; }
+      else if (firstLine.startsWith("Předmět:")) { subject = firstLine.replace("Předmět:", "").trim(); bodyStartIndex = 2; }
+      return { subject: subject, body: lines.slice(bodyStartIndex).join("\n").trim() };
+    }
 
-      if (firstLine.startsWith("Subject:")) {
-        subject = firstLine.replace("Subject:", "").trim();
-        bodyStartIndex = 2;
-      } else if (firstLine.startsWith("Předmět:")) {
-        subject = firstLine.replace("Předmět:", "").trim();
-        bodyStartIndex = 2;
+    // ── LIBRARY ──────────────────────────────────────────────────────────
+    function renderLibrary(filter) {
+      const query = (filter || "").toLowerCase().trim();
+      const items = query
+        ? LIBRARY_TEMPLATES.filter(function (t) {
+            return t.title.toLowerCase().includes(query) ||
+              t.tags.some(function (tag) { return tag.toLowerCase().includes(query); }) ||
+              (t.subject || "").toLowerCase().includes(query);
+          })
+        : LIBRARY_TEMPLATES;
+
+      libList.innerHTML = "";
+
+      if (items.length === 0) {
+        const empty = document.createElement("p");
+        empty.style.cssText = "color:var(--muted);font-size:0.88rem;padding:8px 0;margin:0;";
+        empty.textContent = "Žádné výsledky.";
+        libList.appendChild(empty);
+        return;
       }
 
-      const body = lines.slice(bodyStartIndex).join("\n").trim();
-      return { subject: subject, body: body };
+      items.forEach(function (tpl) {
+        const item = document.createElement("div");
+        item.className = "lib-item";
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+
+        const header = document.createElement("div");
+        header.className = "lib-item-header";
+
+        const title = document.createElement("span");
+        title.className = "lib-item-title";
+        title.textContent = tpl.title;
+
+        const badge = document.createElement("span");
+        badge.className = "lib-type lib-type--" + tpl.type;
+        badge.textContent = tpl.type === "email" ? "Email" : "Prompt";
+
+        header.appendChild(title);
+        header.appendChild(badge);
+        item.appendChild(header);
+
+        if (tpl.tags && tpl.tags.length) {
+          const tagsDiv = document.createElement("div");
+          tagsDiv.className = "lib-item-tags";
+          tpl.tags.slice(0, 4).forEach(function (tag) {
+            const span = document.createElement("span");
+            span.className = "lib-tag";
+            span.textContent = tag;
+            tagsDiv.appendChild(span);
+          });
+          item.appendChild(tagsDiv);
+        }
+
+        function loadLibTemplate() {
+          librarySelectedSubject = tpl.subject || "";
+          setIdeaContent("", tpl.content);
+          templateSelect.value = "";
+          showToast("Načteno: " + tpl.title);
+        }
+
+        item.addEventListener("click", loadLibTemplate);
+        item.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); loadLibTemplate(); }
+        });
+
+        libList.appendChild(item);
+      });
     }
+
+    libSearchInput.addEventListener("input", function () { renderLibrary(libSearchInput.value); });
 
     saveTemplateBtn.addEventListener("click", function () {
       const product = templateProductInput.value.trim();
@@ -958,25 +889,12 @@
       const subject = templateSubjectInput.value.trim();
       const bodyHtml = getTemplateBodyHtml();
       const body = getTemplateBodyText();
-
       if (!product || !purpose || !subject || !body) {
         alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
         return;
       }
-
-      templates.unshift({
-        id: Date.now().toString(),
-        product: product,
-        purpose: purpose,
-        subject: subject,
-        body: body,
-        bodyHtml: bodyHtml,
-        bodyFormat: getEditorFormat(templateBodyEditor)
-      });
-
-      saveTemplates();
-      renderTemplates();
-      resetTemplateEditor();
+      templates.unshift({ id: Date.now().toString(), product, purpose, subject, body, bodyHtml, bodyFormat: getEditorFormat(templateBodyEditor) });
+      saveTemplates(); renderTemplateSelect(); resetTemplateEditor();
       if (templateSelect.value) applySelectedTemplate();
       showToast("Šablona uložena.");
     });
@@ -990,43 +908,20 @@
     });
 
     updateTemplateBtn.addEventListener("click", function () {
-      if (!editingTemplateId) {
-        alert("Nejdřív vyber šablonu a klikni na Načíst do editoru.");
-        return;
-      }
-
+      if (!editingTemplateId) { alert("Nejdřív vyber šablonu a klikni na Načíst do editoru."); return; }
       const product = templateProductInput.value.trim();
       const purpose = templatePurposeInput.value.trim();
       const subject = templateSubjectInput.value.trim();
       const bodyHtml = getTemplateBodyHtml();
       const body = getTemplateBodyText();
-
-      if (!product || !purpose || !subject || !body) {
-        alert("Vyplň prosím produkt, účel, subject i tělo e-mailu.");
-        return;
-      }
-
-      const templateIndex = templates.findIndex(function (tpl) {
-        return tpl.id === editingTemplateId;
-      });
-      if (templateIndex === -1) return;
-
-      templates[templateIndex] = {
-        id: templates[templateIndex].id,
-        product: product,
-        purpose: purpose,
-        subject: subject,
-        body: body,
-        bodyHtml: bodyHtml,
-        bodyFormat: getEditorFormat(templateBodyEditor)
-      };
-
-      saveTemplates();
-      renderTemplates();
-      templateSelect.value = templates[templateIndex].id;
-      templateEditSelect.value = templates[templateIndex].id;
-      resetTemplateEditor();
-      applySelectedTemplate();
+      if (!product || !purpose || !subject || !body) { alert("Vyplň prosím produkt, účel, subject i tělo e-mailu."); return; }
+      const idx = templates.findIndex(function (t) { return t.id === editingTemplateId; });
+      if (idx === -1) return;
+      templates[idx] = { id: templates[idx].id, product, purpose, subject, body, bodyHtml, bodyFormat: getEditorFormat(templateBodyEditor) };
+      saveTemplates(); renderTemplateSelect();
+      templateSelect.value = templates[idx].id;
+      templateEditSelect.value = templates[idx].id;
+      resetTemplateEditor(); applySelectedTemplate();
       showToast("Změny šablony uloženy.");
     });
 
@@ -1038,45 +933,30 @@
     templateEditSelect.addEventListener("change", function () {
       const selected = getSelectedTemplateForEditor();
       fillEditorFromTemplate(selected);
-      if (selected) {
-        templateSelect.value = selected.id;
-        applySelectedTemplate();
-      }
+      if (selected) { templateSelect.value = selected.id; applySelectedTemplate(); }
     });
 
-    templateBodyEditor.addEventListener("input", function () {
-      if (!editingTemplateId) return;
-      syncRightEditorFromLeftDraft();
-    });
-
-    templateSubjectInput.addEventListener("input", function () {
-      if (!editingTemplateId) return;
-      syncRightEditorFromLeftDraft();
-    });
+    templateBodyEditor.addEventListener("input", function () { if (!editingTemplateId) return; syncRightEditorFromLeftDraft(); });
+    templateSubjectInput.addEventListener("input", function () { if (!editingTemplateId) return; syncRightEditorFromLeftDraft(); });
 
     deleteSelectedBtn.addEventListener("click", function () {
       const selectedId = templateEditSelect.value || templateSelect.value;
       if (!selectedId) return;
-      templates = templates.filter(function (tpl) {
-        return tpl.id !== selectedId;
-      });
-      saveTemplates();
-      renderTemplates();
+      templates = templates.filter(function (t) { return t.id !== selectedId; });
+      saveTemplates(); renderTemplateSelect();
       showToast("Šablona smazána.");
     });
 
     loadDefaultsBtn.addEventListener("click", function () {
       const defaults = getDefaultTemplates();
       templates = templates.concat(defaults);
-      saveTemplates();
-      renderTemplates();
+      saveTemplates(); renderTemplateSelect();
       showToast("Výchozí šablony přidány (" + defaults.length + ").");
     });
 
     generateBtn.addEventListener("click", function () {
-      if (templateSelect.value && isRichTemplateContent()) {
-        showToast("Šablona je už připravena včetně formátu.");
-        return;
+      if (templateSelect.value && /<(ul|ol|li|strong|b|span|p|div)\b/i.test(getIdeaHtml())) {
+        showToast("Šablona je už připravena včetně formátu."); return;
       }
       setIdeaContent("", buildEmail());
       showToast("E-mail vygenerován.");
@@ -1095,38 +975,36 @@
         copyBtn.textContent = "Copied";
         showToast("Text zkopírován.");
         setTimeout(function () { copyBtn.textContent = "Copy"; }, 1200);
-      } catch (error) {
+      } catch (e) {
         copyBtn.textContent = "Copy failed";
         setTimeout(function () { copyBtn.textContent = "Copy"; }, 1500);
       }
     });
 
     openInEmailBtn.addEventListener("click", function () {
-      if (!getIdeaHtml()) {
-        setIdeaContent("", buildEmail());
-      }
-
+      if (!getIdeaHtml()) setIdeaContent("", buildEmail());
       const formattedHtml = buildEmailHtmlFromEditor();
       if (!formattedHtml) return;
 
-      // Subject: prefer template field, fall back to parsing editor text
       let subject = "";
       const selectedTpl = getSelectedTemplate();
       if (selectedTpl && selectedTpl.subject) {
         subject = selectedTpl.subject;
+      } else if (librarySelectedSubject) {
+        subject = librarySelectedSubject;
       } else {
-        const parts = parseEmailParts(getMailtoTextFromEditorHtml(ideaEditor));
-        subject = parts.subject || "Email";
+        subject = parseEmailParts(getMailtoTextFromEditorHtml(ideaEditor)).subject || "Email";
       }
 
       const plainBody = getMailtoTextFromEditorHtml(ideaEditor);
       const mailtoUrl = "mailto:?subject=" + encodeURIComponent(subject);
 
       if (navigator.clipboard && window.ClipboardItem) {
-        const htmlBlob = new Blob([formattedHtml], { type: "text/html" });
-        const textBlob = new Blob([plainBody], { type: "text/plain" });
         navigator.clipboard.write([
-          new ClipboardItem({ "text/html": htmlBlob, "text/plain": textBlob })
+          new ClipboardItem({
+            "text/html": new Blob([formattedHtml], { type: "text/html" }),
+            "text/plain": new Blob([plainBody], { type: "text/plain" })
+          })
         ]).then(function () {
           window.location.href = mailtoUrl;
           showToast("Otevřen nový e-mail. Vlož Ctrl+V pro přesný vzhled.");
@@ -1142,19 +1020,13 @@
 
     editorButtons.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        const editorId = btn.getAttribute("data-editor-target");
-        const targetEditor = getEditorById(editorId);
+        const targetEditor = getEditorById(btn.getAttribute("data-editor-target"));
         if (!targetEditor) return;
-
         const cmd = btn.getAttribute("data-editor-cmd");
         if (!cmd) return;
-
         targetEditor.focus();
 
-        if (cmd === "insertLineBreak") {
-          document.execCommand("insertHTML", false, "<br>");
-          return;
-        }
+        if (cmd === "insertLineBreak") { document.execCommand("insertHTML", false, "<br>"); return; }
 
         if (cmd === "insertLink") {
           const url = prompt("URL:", "https://");
@@ -1165,8 +1037,7 @@
           if (hasSelection) {
             document.execCommand("createLink", false, clean);
             targetEditor.querySelectorAll('a[href="' + clean + '"]').forEach(function (a) {
-              a.target = "_blank";
-              a.rel = "noopener noreferrer";
+              a.target = "_blank"; a.rel = "noopener noreferrer";
             });
           } else {
             const text = prompt("Text odkazu:", clean) || clean;
@@ -1182,7 +1053,8 @@
     });
 
     loadTemplates();
-    renderTemplates();
+    renderTemplateSelect();
+    renderLibrary();
   </script>
 </body>
 </html>
