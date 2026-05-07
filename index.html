@@ -6,7 +6,6 @@
   <title>Brain Not Found</title>
   <style>
     :root {
-      color-scheme: light;
       --bg: #f5f7fb;
       --card: #ffffff;
       --text: #1f2937;
@@ -15,108 +14,73 @@
       --border: #e5e7eb;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
     }
 
-    .container {
-      width: 100%;
-      max-width: 860px;
-      margin: 0 auto;
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
     }
 
-    h1 { margin: 0 0 20px; text-align: center; font-size: 2rem; }
-
-    .grid {
+    .tiles {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 14px;
+      width: 100%;
+      max-width: 640px;
     }
 
-    .card {
+    .tile {
+      height: 90px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-    }
-
-    .card h2 { margin: 0 0 10px; font-size: 1.05rem; }
-
-    .item { margin: 0; color: var(--muted); line-height: 1.45; font-size: 0.95rem; }
-
-    .button-link {
-      display: inline-block;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       text-decoration: none;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.92rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      line-height: 1.4;
+      padding: 12px;
     }
 
-    .button-link:hover { opacity: 0.92; }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin: 0 0 12px;
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(37,99,235,0.13);
+      border-color: var(--accent);
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h1>Brain Not Found</h1>
-
-    <section aria-label="Dashboard links">
-      <p class="section-title">Dashboard</p>
-      <div class="grid">
-        <article class="card">
-          <h2>Smart Reply ✦</h2>
-          <a class="button-link" href="tools/smart-reply.html">Open Smart Reply</a>
-          <p class="item" style="margin-top:10px;">Paste any email → get a ready-to-send reply drafted by AI in your tone.</p>
-        </article>
-
-        <article class="card">
-          <h2>Tools</h2>
-          <a class="button-link" href="tools/email-generator.html">Email Generator</a>
-          <p class="item" style="margin-top:10px;">Quick email drafting in one box.</p>
-        </article>
-
-        <article class="card">
-          <h2>Dashboard</h2>
-          <a class="button-link" href="https://danielavokalova.github.io/dashboard/" target="_blank" rel="noopener noreferrer">Open Dashboard</a>
-          <p class="item" style="margin-top:10px;">Fully functional central crossroad.</p>
-        </article>
-
-        <article class="card">
-          <h2>Systems</h2>
-          <p class="item">Email templates (placeholder text)</p>
-        </article>
-
-        <article class="card">
-          <h2>Knowledge</h2>
-          <p class="item">Prompts (placeholder)</p>
-        </article>
-
-        <article class="card">
-          <h2>Inbox</h2>
-          <a class="button-link" href="inbox/index.html">Quick Notes</a>
-          <p class="item" style="margin-top:10px;">Fast capture for ideas and notes.</p>
-        </article>
-      </div>
-    </section>
-  </main>
+  <h1>Brain Not Found</h1>
+  <div class="tiles">
+    <a class="tile" href="tools/email-generator.html">Email<br>Generator</a>
+    <a class="tile" href="tools/smart-reply.html">Smart<br>Reply</a>
+    <a class="tile" href="inbox/index.html">Quick<br>Notes</a>
+    <a class="tile" href="https://danielavokalova.github.io/dashboard/" target="_blank" rel="noopener noreferrer">Dashboard</a>
+  </div>
 </body>
 </html>
